@@ -3,469 +3,733 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rum Pum - Taste the Magic | 3D Product Showcase</title>
+<title>Rum Pum 3D Experience</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0a0a0a;
+  font-family: 'Poppins', sans-serif;
+  background: #050505;
   color: #fff;
   overflow-x: hidden;
+  perspective: 1200px;
 }
 
-/* Hero */
-.hero {
+/* ===== HERO 3D ===== */
+.hero-3d {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
   position: relative;
-  padding: 2rem;
+  background: radial-gradient(ellipse at 30% 20%, #1a0a00 0%, #050505 50%, #0a0a1a 100%);
+  overflow: hidden;
+  perspective: 1000px;
 }
-.hero::before {
+
+.hero-3d::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%23ff6b35" opacity="0.3"/></svg>');
-  background-size: 50px 50px;
-  opacity: 0.5;
-  animation: sparkle 3s linear infinite;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: pulse-glow 4s ease-in-out infinite;
 }
-@keyframes sparkle {
-  0%,100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+
+@keyframes pulse-glow {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity:0.5; }
+  50% { transform: translate(-50%,-50%) scale(1.3); opacity:0.8; }
 }
-.hero-content { position: relative; z-index: 2; }
-.hero h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
+
+.floating-products {
+  position: absolute;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.float-item {
+  position: absolute;
+  width: 120px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(255,107,53,0.3);
+  animation: float-3d 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.float-item:nth-child(1) { top:10%; left:10%; animation-delay:0s; }
+.float-item:nth-child(2) { top:15%; right:15%; animation-delay:1s; }
+.float-item:nth-child(3) { bottom:20%; left:15%; animation-delay:2s; }
+.float-item:nth-child(4) { bottom:15%; right:10%; animation-delay:3s; }
+.float-item:nth-child(5) { top:50%; left:5%; animation-delay:1.5s; }
+.float-item:nth-child(6) { top:50%; right:5%; animation-delay:2.5s; }
+
+@keyframes float-3d {
+  0%,100% { transform: translateY(0) rotateY(0deg) rotateX(5deg); }
+  25% { transform: translateY(-20px) rotateY(10deg) rotateX(-5deg); }
+  50% { transform: translateY(0) rotateY(0deg) rotateX(5deg); }
+  75% { transform: translateY(20px) rotateY(-10deg) rotateX(-5deg); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  transform-style: preserve-3d;
+}
+
+.hero-content h1 {
+  font-size: clamp(3rem, 10vw, 7rem);
   font-weight: 900;
-  background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc00);
+  background: linear-gradient(135deg, #ff6b35, #ff9500, #ffd700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 40px rgba(255,107,53,0.3);
-  letter-spacing: -2px;
+  text-shadow: 0 0 60px rgba(255,107,53,0.4);
+  letter-spacing: -3px;
+  transform: translateZ(100px);
+  animation: title-3d 3s ease-out;
 }
-.hero .tagline {
+
+@keyframes title-3d {
+  from { transform: translateZ(-500px) rotateX(30deg); opacity:0; }
+  to { transform: translateZ(100px) rotateX(0deg); opacity:1; }
+}
+
+.hero-content .tagline {
   font-size: clamp(1rem, 2.5vw, 1.5rem);
   color: #aaa;
   margin-top: 1rem;
+  transform: translateZ(50px);
 }
-.hero .sub {
+
+.hero-content .sub {
   font-size: 1.1rem;
   color: #ff6b35;
   margin-top: 0.5rem;
   font-weight: 600;
+  transform: translateZ(50px);
 }
 
-/* Section */
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  animation: bounce 2s infinite;
+  font-size: 2rem;
+  color: #ff6b35;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(15px); }
+}
+
+/* ===== SECTIONS ===== */
 .section {
-  padding: 4rem 1rem;
+  padding: 6rem 1rem;
   max-width: 1400px;
   margin: 0 auto;
+  perspective: 1200px;
 }
+
 .section-title {
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   text-align: center;
-  margin-bottom: 3rem;
-  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  margin-bottom: 4rem;
+  background: linear-gradient(90deg, #ff6b35, #ff9500, #ffd700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  transform: translateZ(30px);
 }
 
-/* Product Grid */
-.products-grid {
+/* ===== 3D CAROUSEL ===== */
+.carousel-3d-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  perspective: 1000px;
+  margin: 4rem 0;
+}
+
+.carousel-3d {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  transform-style: preserve-3d;
+  animation: spin-carousel 20s linear infinite;
+}
+
+.carousel-3d:hover {
+  animation-play-state: paused;
+}
+
+.carousel-item {
+  position: absolute;
+  width: 260px;
+  height: 360px;
+  left: 20px; top: 20px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(255,107,53,0.3);
+  box-shadow: 0 0 40px rgba(255,107,53,0.2);
+  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: all 0.5s;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+}
+
+.carousel-item .c-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.carousel-item .c-info h4 {
+  font-size: 1rem;
+  color: #fff;
+}
+
+.carousel-item .c-info .c-price {
+  color: #ff6b35;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.carousel-item:nth-child(1) { transform: rotateY(0deg) translateZ(350px); }
+.carousel-item:nth-child(2) { transform: rotateY(45deg) translateZ(350px); }
+.carousel-item:nth-child(3) { transform: rotateY(90deg) translateZ(350px); }
+.carousel-item:nth-child(4) { transform: rotateY(135deg) translateZ(350px); }
+.carousel-item:nth-child(5) { transform: rotateY(180deg) translateZ(350px); }
+.carousel-item:nth-child(6) { transform: rotateY(225deg) translateZ(350px); }
+.carousel-item:nth-child(7) { transform: rotateY(270deg) translateZ(350px); }
+.carousel-item:nth-child(8) { transform: rotateY(315deg) translateZ(350px); }
+
+@keyframes spin-carousel {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+/* ===== 3D FLIP CARDS ===== */
+.flip-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 0 1rem;
+  gap: 2.5rem;
+  perspective: 1500px;
 }
-.product-card {
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(255,107,53,0.15);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+.flip-card {
+  height: 380px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
   position: relative;
-}
-.product-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(255,107,53,0.5);
-  box-shadow: 0 20px 60px rgba(255,107,53,0.2);
-}
-.product-card .img-wrap {
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-  position: relative;
-  background: #0f0f1a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.product-card .img-wrap img {
   width: 100%;
   height: 100%;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.flip-card-front {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border: 1px solid rgba(255,107,53,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.flip-card-front img {
+  width: 100%;
+  height: 65%;
   object-fit: cover;
-  transition: transform 0.5s ease;
 }
-.product-card:hover .img-wrap img {
-  transform: scale(1.1);
+
+.flip-card-front .f-info {
+  padding: 1.2rem;
 }
-.product-card .img-wrap .no-img {
-  font-size: 4rem;
-  opacity: 0.3;
+
+.flip-card-front .f-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
 }
-.product-info {
-  padding: 1.5rem;
+
+.flip-card-front .f-info .f-price {
+  color: #ff6b35;
+  font-size: 1.4rem;
+  font-weight: 700;
 }
-.product-info h3 {
-  font-size: 1.2rem;
-  color: #fff;
-  margin-bottom: 0.5rem;
+
+.flip-card-back {
+  background: linear-gradient(135deg, #ff6b35, #ff9500);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
 }
-.product-info p {
-  font-size: 0.9rem;
-  color: #aaa;
-  line-height: 1.5;
+
+.flip-card-back h3 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
-.product-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+.flip-card-back p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
 }
-.price {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #ff6b35;
-}
-.badge {
-  background: rgba(255,107,53,0.2);
-  color: #ff6b35;
-  padding: 0.3rem 0.8rem;
+
+.flip-card-back .badge-3d {
+  background: rgba(0,0,0,0.3);
+  padding: 0.5rem 1.2rem;
   border-radius: 20px;
-  font-size: 0.75rem;
   font-weight: 600;
 }
 
-/* Gallery Section */
-.gallery-section {
-  background: #0d0d1a;
-  padding: 4rem 1rem;
+/* ===== 3D TILT CARDS (GSAP-like with CSS) ===== */
+.tilt-section {
+  background: linear-gradient(180deg, #050505, #0a0a1a, #050505);
+  padding: 6rem 1rem;
 }
-.gallery-grid {
+
+.tilt-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  perspective: 1000px;
 }
-.gallery-item {
-  border-radius: 12px;
+
+.tilt-card {
+  position: relative;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255,107,53,0.1);
-  transition: all 0.3s ease;
-  aspect-ratio: 1;
+  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+  border: 1px solid rgba(255,107,53,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
-.gallery-item:hover {
-  transform: scale(1.05);
-  border-color: rgba(255,107,53,0.4);
-  box-shadow: 0 10px 30px rgba(255,107,53,0.15);
+
+.tilt-card:hover {
+  transform: translateY(-15px) rotateX(5deg) rotateY(-5deg) scale(1.03);
+  box-shadow: 
+    0 30px 60px rgba(255,107,53,0.25),
+    0 0 0 1px rgba(255,107,53,0.3);
 }
-.gallery-item img {
+
+.tilt-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tilt-card:hover img {
+  transform: scale(1.15);
+}
+
+.tilt-card .t-info {
+  padding: 1.5rem;
+}
+
+.tilt-card .t-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tilt-card .t-info p {
+  font-size: 0.85rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.tilt-card .t-price {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: linear-gradient(135deg, #ff6b35, #ff9500);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+}
+
+/* ===== 3D STACK / FAN ===== */
+.stack-section {
+  padding: 6rem 1rem;
+  text-align: center;
+}
+
+.stack-3d {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  margin: 3rem auto;
+  perspective: 1000px;
+}
+
+.stack-card {
+  position: absolute;
+  width: 280px;
+  height: 380px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(255,107,53,0.3);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.stack-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 3rem 1rem;
-  background: #050508;
-  border-top: 1px solid rgba(255,107,53,0.1);
+.stack-3d:hover .stack-card:nth-child(1) { transform: translateX(-120px) rotateY(25deg) translateZ(50px); }
+.stack-3d:hover .stack-card:nth-child(2) { transform: translateX(-40px) rotateY(10deg) translateZ(30px); }
+.stack-3d:hover .stack-card:nth-child(3) { transform: translateX(40px) rotateY(-10deg) translateZ(30px); }
+.stack-3d:hover .stack-card:nth-child(4) { transform: translateX(120px) rotateY(-25deg) translateZ(50px); }
+
+.stack-card:nth-child(1) { transform: translateX(0) rotateY(0deg); z-index:4; }
+.stack-card:nth-child(2) { transform: translateX(0) rotateY(0deg); z-index:3; }
+.stack-card:nth-child(3) { transform: translateX(0) rotateY(0deg); z-index:2; }
+.stack-card:nth-child(4) { transform: translateX(0) rotateY(0deg); z-index:1; }
+
+/* ===== PARTICLES ===== */
+.particles {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events: none;
+  z-index: 9999;
 }
-.footer h2 {
-  font-size: 2rem;
-  background: linear-gradient(90deg, #ff6b35, #f7931e);
+
+.particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: #ff6b35;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: particle-float 8s linear infinite;
+}
+
+@keyframes particle-float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity:0; }
+  10% { opacity:0.6; }
+  90% { opacity:0.6; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity:0; }
+}
+
+/* ===== FOOTER ===== */
+.footer-3d {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: #020202;
+  border-top: 1px solid rgba(255,107,53,0.1);
+  perspective: 500px;
+}
+
+.footer-3d h2 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, #ff6b35, #ffd700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 1rem;
+  transform: translateZ(50px);
 }
-.footer p { color: #666; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 4px; }
-
-/* Responsive */
-@media (max-width: 600px) {
-  .products-grid { grid-template-columns: 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .carousel-3d-wrap { display: none; }
+  .flip-grid { grid-template-columns: 1fr; }
+  .stack-3d { width: 250px; height: 330px; }
+  .stack-card { width: 230px; height: 310px; }
+  .float-item { width: 70px; }
 }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 3px; }
 </style>
 <base target="_blank">
 </head>
 <body>
 
-<!-- Hero -->
-<section class="hero">
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- ===== HERO 3D ===== -->
+<section class="hero-3d">
+  <div class="floating-products">
+    <img src="./img-019.jpg" class="float-item" alt="">
+    <img src="./img-035.jpg" class="float-item" alt="">
+    <img src="./img-053.jpg" class="float-item" alt="">
+    <img src="./img-070.jpg" class="float-item" alt="">
+    <img src="./img-134.jpg" class="float-item" alt="">
+    <img src="./img-219.jpg" class="float-item" alt="">
+  </div>
   <div class="hero-content">
     <h1>RUM PUM</h1>
-    <p class="tagline">Taste the Magic | भारत का नं.1 नूडल्स ब्रांड</p>
-    <p class="sub">20+ स्वादिष्ट प्रोडक्ट्स — हर उम्र, हर स्वाद, हर बजट</p>
+    <p class="tagline">3D Product Experience</p>
+    <p class="sub">भारत का नं.1 नूडल्स ब्रांड — अब 3D में</p>
   </div>
+  <div class="scroll-hint">↓</div>
 </section>
 
-<!-- Noodles Section -->
+<!-- ===== 3D CAROUSEL ===== -->
 <section class="section">
-  <h2 class="section-title">🍜 Noodles Collection</h2>
-  <div class="products-grid">
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-019.jpg" alt="2 Minute Mazza" loading="lazy"></div>
-      <div class="product-info">
-        <h3>2 Minute Mazza</h3>
-        <p>मसालेदार नूडल्स जो 2 मिनट में तैयार। हर बाइट में असली देसी स्वाद।</p>
-        <div class="product-meta"><span class="price">₹10</span><span class="badge">Popular</span></div>
+  <h2 class="section-title">🎠 3D Product Carousel</h2>
+  <p style="text-align:center; color:#888; margin-bottom:2rem;">Hover करें रोकने के लिए — products घूम रहे हैं!</p>
+  <div class="carousel-3d-wrap">
+    <div class="carousel-3d">
+      <div class="carousel-item">
+        <img src="./img-019.jpg" alt="">
+        <div class="c-info"><h4>2 Minute Mazza</h4><div class="c-price">₹10</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-021.jpg" alt="2 Minute Mazza ₹5" loading="lazy"></div>
-      <div class="product-info">
-        <h3>2 Minute Mazza ₹5 Pack</h3>
-        <p>छोटा पैक, बड़ा स्वाद! बच्चों की पॉकेट मनी वाली पसंद।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Popular</span></div>
+      <div class="carousel-item">
+        <img src="./img-021.jpg" alt="">
+        <div class="c-info"><h4>2 Minute Mazza ₹5</h4><div class="c-price">₹5</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-025.jpg" alt="2 Minute Mazza Family" loading="lazy"></div>
-      <div class="product-info">
-        <h3>2 Minute Mazza Family Pack</h3>
-        <p>पूरी फैमिली के लिए एक ही पैक। ढेर सारा मज़ा, ढेर सारा प्यार।</p>
-        <div class="product-meta"><span class="price">₹20</span><span class="badge">Family</span></div>
+      <div class="carousel-item">
+        <img src="./img-025.jpg" alt="">
+        <div class="c-info"><h4>Family Pack</h4><div class="c-price">₹20</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-035.jpg" alt="Wow Chow Green" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Wow Chow (Green Pack)</h3>
-        <p>हरी मिर्च का तीखा स्वाद। जिसे तीखा पसंद हो, उनके लिए बना है।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Chatpata</span></div>
+      <div class="carousel-item">
+        <img src="./img-035.jpg" alt="">
+        <div class="c-info"><h4>Wow Chow Green</h4><div class="c-price">₹5</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-037.jpg" alt="Wow Chow Yellow" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Wow Chow (Yellow Pack)</h3>
-        <p>क्लासिक मसाला स्वाद। पीली पैकेट में छुपा है देसी मसालों का खजाना।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Popular</span></div>
+      <div class="carousel-item">
+        <img src="./img-037.jpg" alt="">
+        <div class="c-info"><h4>Wow Chow Yellow</h4><div class="c-price">₹5</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-046.jpg" alt="Njoy ₹5" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Njoy ₹5 Pack</h3>
-        <p>छोटा price, बड़ा njoyment! बच्चों की favourite evening snack।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+      <div class="carousel-item">
+        <img src="./img-046.jpg" alt="">
+        <div class="c-info"><h4>Njoy ₹5</h4><div class="c-price">₹5</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-050.jpg" alt="Njoy ₹10" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Njoy ₹10 Pack</h3>
-        <p>Double mazaa, double njoyment। दोस्त के साथ share करने वाला pack।</p>
-        <div class="product-meta"><span class="price">₹10</span><span class="badge">Kids</span></div>
+      <div class="carousel-item">
+        <img src="./img-050.jpg" alt="">
+        <div class="c-info"><h4>Njoy ₹10</h4><div class="c-price">₹10</div></div>
       </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-053.jpg" alt="Joker" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Joker Instant Noodles</h3>
-        <p>Joker के साथ खाना बना fun! बच्चों का super favourite character pack।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-055.jpg" alt="n-joy RTE" loading="lazy"></div>
-      <div class="product-info">
-        <h3>n-joy Ready to Eat (Kid Pack)</h3>
-        <p>बच्चों के लिए special ready-to-eat। School tiffin में माँ का प्यार।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">RTE</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-070.jpg" alt="Hot & Spicy" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Hot & Spicy Noodles</h3>
-        <p>लाल मिर्च का असली दम। जिसे तीखा-तीखा चाहिए, बस उन्हीं के लिए।</p>
-        <div class="product-meta"><span class="price">₹5-10</span><span class="badge">Spicy</span></div>
+      <div class="carousel-item">
+        <img src="./img-053.jpg" alt="">
+        <div class="c-info"><h4>Joker</h4><div class="c-price">₹5</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Snacks Section -->
-<section class="section" style="background:#0d0d1a;">
-  <h2 class="section-title">🥣 Snacks & Bowls</h2>
-  <div class="products-grid">
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-072.jpg" alt="Noodles in Bowl" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Noodles in Bowl (Red)</h3>
-        <p>लाल bowl में गर्म-गर्म नूडल्स। Fork included, बस पानी मिलाओ और खाओ।</p>
-        <div class="product-meta"><span class="price">₹--</span><span class="badge">New</span></div>
+<!-- ===== 3D FLIP CARDS ===== -->
+<section class="section" style="background:linear-gradient(180deg,#050505,#0a0510,#050505);">
+  <h2 class="section-title">🔄 3D Flip Cards</h2>
+  <p style="text-align:center; color:#888; margin-bottom:2rem;">Card पर mouse ले जाएं — पीछे की जानकारी दिखेगी!</p>
+  <div class="flip-grid">
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-019.jpg" alt="">
+          <div class="f-info"><h3>2 Minute Mazza</h3><div class="f-price">₹10</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>2 Minute Mazza</h3>
+          <p>मसालेदार नूडल्स जो 2 मिनट में तैयार। हर बाइट में असली देसी स्वाद।</p>
+          <div class="badge-3d">⭐ Popular</div>
+        </div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-094.jpg" alt="Katori" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Katori Noodles</h3>
-        <p>कटोरी में परोसा हुआ स्वाद। Party, picnic, कहीं भी, कभी भी।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Bestseller</span></div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-035.jpg" alt="">
+          <div class="f-info"><h3>Wow Chow Green</h3><div class="f-price">₹5</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>Wow Chow Green</h3>
+          <p>हरी मिर्च का तीखा स्वाद। जिसे तीखा पसंद हो, उनके लिए बना है।</p>
+          <div class="badge-3d">🌶️ Spicy</div>
+        </div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-134.jpg" alt="Cups" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Cup Noodles</h3>
-        <p>कप में तैयार नूडल्स। Office, travel, hostel — instant hunger fix।</p>
-        <div class="product-meta"><span class="price">₹10</span><span class="badge">Convenient</span></div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-053.jpg" alt="">
+          <div class="f-info"><h3>Joker Noodles</h3><div class="f-price">₹5</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>Joker Noodles</h3>
+          <p>Joker के साथ खाना बना fun! बच्चों का super favourite character pack।</p>
+          <div class="badge-3d">🎭 Kids</div>
+        </div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-177.jpg" alt="Alphabet" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Alphabet Noodles</h3>
-        <p>ABCD वाले नूडल्स! बच्चों को पढ़ाते-पढ़ाते खिलाओ। Fun + Nutrition।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-070.jpg" alt="">
+          <div class="f-info"><h3>Hot & Spicy</h3><div class="f-price">₹5</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>Hot & Spicy</h3>
+          <p>लाल मिर्च का असली दम। जिसे तीखा-तीखा चाहिए, बस उन्हीं के लिए।</p>
+          <div class="badge-3d">🔥 Xtra Spicy</div>
+        </div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-219.jpg" alt="Noodle Snack" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Noodle Snack</h3>
-        <p>कुरकुरे नूडल्स स्नैक्स। Chai के साथ perfect companion।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-072.jpg" alt="">
+          <div class="f-info"><h3>Noodles in Bowl</h3><div class="f-price">₹--</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>Noodles in Bowl</h3>
+          <p>लाल bowl में गर्म-गर्म नूडल्स। Fork included, बस पानी मिलाओ और खाओ।</p>
+          <div class="badge-3d">🥣 New</div>
+        </div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="img-wrap"><img src="./img-236.jpg" alt="Pasta Snack" loading="lazy"></div>
-      <div class="product-info">
-        <h3>Pasta Snack</h3>
-        <p>इटालियन स्वाद में देसी मसाला। Pasta का नया अवतार।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Trending</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Photo Gallery -->
-<section class="gallery-section">
-  <h2 class="section-title">📸 Product Gallery</h2>
-  <div class="gallery-grid">
-    <div class="gallery-item"><img src="./img-019.jpg" alt="Product 1" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-021.jpg" alt="Product 2" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-025.jpg" alt="Product 3" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-035.jpg" alt="Product 4" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-037.jpg" alt="Product 5" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-046.jpg" alt="Product 6" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-050.jpg" alt="Product 7" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-053.jpg" alt="Product 8" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-055.jpg" alt="Product 9" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-070.jpg" alt="Product 10" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-072.jpg" alt="Product 11" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-094.jpg" alt="Product 12" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-134.jpg" alt="Product 13" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-177.jpg" alt="Product 14" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-219.jpg" alt="Product 15" loading="lazy"></div>
-    <div class="gallery-item"><img src="./img-236.jpg" alt="Product 16" loading="lazy"></div>
-  </div>
-</section>
-
-<!-- More Products (Text Only) -->
-<section class="section">
-  <h2 class="section-title">🛒 More Delicious Products</h2>
-  <div class="products-grid">
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🍜</span></div>
-      <div class="product-info">
-        <h3>Safari Noodles</h3>
-        <p>जंगल सफारी का मज़ा, नूडल्स के साथ। बच्चों का adventure partner।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥠</span></div>
-      <div class="product-info">
-        <h3>Jeera Papad</h3>
-        <p>जीरे का classic taste। Crunchy, crispy, masaledaar।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Namkeen</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🔺</span></div>
-      <div class="product-info">
-        <h3>Triangle Snack</h3>
-        <p>त्रिकोणीय आकार में triangle crunch। Shape में fun, taste में gun।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🌶️</span></div>
-      <div class="product-info">
-        <h3>Tirche Mirche Masala STIX</h3>
-        <p>तीखे-मीठे मसाले में लिपटे crunchy stix। एक बार खाओ, बार-बार मांगो।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Spicy</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🍅</span></div>
-      <div class="product-info">
-        <h3>Tirche Mirche Tomato STIX</h3>
-        <p>टमाटर का tangy taste। Tomato lovers के लिए special treat।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Tangy</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥔</span></div>
-      <div class="product-info">
-        <h3>Potato Crackers</h3>
-        <p>आलू का asli swaad। Potato lovers की पहली पसंद।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥖</span></div>
-      <div class="product-info">
-        <h3>Crunchy Stix</h3>
-        <p>Extra crunchy, extra tasty। Chai time का best साथी।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🧂</span></div>
-      <div class="product-info">
-        <h3>Pipe Salted</h3>
-        <p>नमकीन pipe snacks। Simple swaad, बेमिसाल मज़ा।</p>
-        <div class="product-meta"><span class="price">₹5</span><span class="badge">Classic</span></div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="./img-177.jpg" alt="">
+          <div class="f-info"><h3>Alphabet</h3><div class="f-price">₹5</div></div>
+        </div>
+        <div class="flip-card-back">
+          <h3>Alphabet Noodles</h3>
+          <p>ABCD वाले नूडल्स! बच्चों को पढ़ाते-पढ़ाते खिलाओ। Fun + Nutrition।</p>
+          <div class="badge-3d">🔤 Educational</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
+<!-- ===== 3D TILT CARDS ===== -->
+<section class="tilt-section">
+  <h2 class="section-title">🎯 3D Tilt Gallery</h2>
+  <p style="text-align:center; color:#888; margin-bottom:2rem;">Card पर mouse ले जाएं — 3D tilt effect!</p>
+  <div class="tilt-grid">
+    <div class="tilt-card">
+      <div class="t-price">₹10</div>
+      <img src="./img-019.jpg" alt="">
+      <div class="t-info"><h3>2 Minute Mazza</h3><p>मसालेदार नूडल्स जो 2 मिनट में तैयार</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹5</div>
+      <img src="./img-021.jpg" alt="">
+      <div class="t-info"><h3>Mazza ₹5 Pack</h3><p>छोटा पैक, बड़ा स्वाद!</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹20</div>
+      <img src="./img-025.jpg" alt="">
+      <div class="t-info"><h3>Family Pack</h3><p>पूरी फैमिली के लिए एक ही पैक</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹5</div>
+      <img src="./img-046.jpg" alt="">
+      <div class="t-info"><h3>Njoy ₹5</h3><p>छोटा price, बड़ा njoyment!</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹5</div>
+      <img src="./img-055.jpg" alt="">
+      <div class="t-info"><h3>n-joy RTE</h3><p>बच्चों के लिए special ready-to-eat</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹5</div>
+      <img src="./img-094.jpg" alt="">
+      <div class="t-info"><h3>Katori</h3><p>कटोरी में परोसा हुआ स्वाद</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹10</div>
+      <img src="./img-134.jpg" alt="">
+      <div class="t-info"><h3>Cup Noodles</h3><p>Office, travel, hostel — instant hunger fix</p></div>
+    </div>
+    <div class="tilt-card">
+      <div class="t-price">₹5</div>
+      <img src="./img-236.jpg" alt="">
+      <div class="t-info"><h3>Pasta Snack</h3><p>इटालियन स्वाद में देसी मसाला</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3D STACK ===== -->
+<section class="stack-section">
+  <h2 class="section-title">🃏 3D Card Stack</h2>
+  <p style="text-align:center; color:#888; margin-bottom:2rem;">Stack पर hover करें — cards फैल जाएंगी!</p>
+  <div class="stack-3d">
+    <div class="stack-card"><img src="./img-019.jpg" alt=""></div>
+    <div class="stack-card"><img src="./img-035.jpg" alt=""></div>
+    <div class="stack-card"><img src="./img-053.jpg" alt=""></div>
+    <div class="stack-card"><img src="./img-070.jpg" alt=""></div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer-3d">
   <h2>RUM PUM</h2>
-  <p>Taste the Magic | 20+ Products | Har Umar, Har Swaad, Har Budget</p>
-  <p style="margin-top:1rem; color:#444;">© 2026 Rum Pum Foods. All Rights Reserved.</p>
+  <p style="color:#666; margin-top:1rem;">Taste the Magic | 20+ Products | 3D Experience</p>
+  <p style="color:#444; margin-top:0.5rem;">© 2026 Rum Pum Foods</p>
 </footer>
+
+<script>
+// Particles
+const particlesContainer = document.getElementById('particles');
+for(let i=0; i<30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random()*100 + '%';
+  p.style.animationDuration = (5 + Math.random()*5) + 's';
+  p.style.animationDelay = Math.random()*5 + 's';
+  p.style.width = (2 + Math.random()*4) + 'px';
+  p.style.height = p.style.width;
+  particlesContainer.appendChild(p);
+}
+
+// 3D Tilt effect for cards
+const tiltCards = document.querySelectorAll('.tilt-card');
+tiltCards.forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 10;
+    const rotateY = (centerX - x) / 10;
+    card.style.transform = `translateY(-15px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+</script>
 
 </body>
 </html>
