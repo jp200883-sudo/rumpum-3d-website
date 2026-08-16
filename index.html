@@ -1,1066 +1,471 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rum Pum - Taste the Magic | 3D Product Showcase</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --rp-red: #E31837;
-            --rp-yellow: #FFD700;
-            --rp-orange: #FF6B00;
-            --rp-dark: #1a1a2e;
-            --rp-darker: #0f0f1a;
-            --rp-card: #16213e;
-            --rp-gold: #D4AF37;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
-            background: var(--rp-darker);
-            color: #fff;
-            overflow-x: hidden;
-        }
-        #steamCanvas {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; opacity: 0.4;
-        }
-        nav {
-            position: fixed; top: 0; width: 100%;
-            background: rgba(15,15,26,0.95);
-            backdrop-filter: blur(20px); z-index: 1000;
-            padding: 15px 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,215,0,0.1);
-        }
-        .logo {
-            font-size: 28px; font-weight: 900;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-yellow));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .logo span { font-weight: 300; font-size: 14px; display: block; color: #aaa; -webkit-text-fill-color: #aaa; }
-        .nav-links { display: flex; gap: 30px; list-style: none; }
-        .nav-links a { color: #ccc; text-decoration: none; font-weight: 500; transition: 0.3s; position: relative; }
-        .nav-links a:hover { color: var(--rp-yellow); }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: -5px; left: 0;
-            width: 0; height: 2px;
-            background: linear-gradient(90deg, var(--rp-red), var(--rp-yellow));
-            transition: 0.3s;
-        }
-        .nav-links a:hover::after { width: 100%; }
-        .cart-icon {
-            position: relative; cursor: pointer; font-size: 24px;
-            padding: 8px 15px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border-radius: 50px; transition: 0.3s;
-        }
-        .cart-icon:hover { transform: scale(1.1); box-shadow: 0 5px 20px rgba(227,24,55,0.4); }
-        .cart-count {
-            position: absolute; top: -5px; right: -5px;
-            background: var(--rp-yellow); color: #000;
-            font-size: 12px; font-weight: 700;
-            width: 22px; height: 22px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .hero {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            position: relative; padding-top: 80px;
-            background: radial-gradient(ellipse at center, rgba(227,24,55,0.15) 0%, transparent 70%);
-        }
-        .hero-content { text-align: center; z-index: 10; max-width: 900px; padding: 0 20px; }
-        .hero-badge {
-            display: inline-block; padding: 8px 25px;
-            background: linear-gradient(135deg, rgba(227,24,55,0.3), rgba(255,107,0,0.3));
-            border: 1px solid rgba(255,215,0,0.3); border-radius: 50px;
-            font-size: 14px; color: var(--rp-yellow); margin-bottom: 25px;
-            letter-spacing: 2px; text-transform: uppercase;
-        }
-        .hero h1 {
-            font-size: clamp(40px, 8vw, 80px); font-weight: 900; line-height: 1.1; margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff 0%, var(--rp-yellow) 50%, var(--rp-red) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: heroGlow 3s ease-in-out infinite alternate;
-        }
-        @keyframes heroGlow {
-            0% { filter: drop-shadow(0 0 20px rgba(227,24,55,0.3)); }
-            100% { filter: drop-shadow(0 0 40px rgba(255,215,0,0.5)); }
-        }
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero p { font-size: 18px; color: #aaa; margin-bottom: 40px; line-height: 1.8; }
-        .hero p strong { color: var(--rp-yellow); }
-        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .btn-primary {
-            padding: 15px 40px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            color: #fff; border: none; border-radius: 50px;
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 30px rgba(227,24,55,0.3);
-        }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(227,24,55,0.5); }
-        .btn-secondary {
-            padding: 15px 40px; background: transparent; color: var(--rp-yellow);
-            border: 2px solid rgba(255,215,0,0.3); border-radius: 50px;
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-        }
-        .btn-secondary:hover { border-color: var(--rp-yellow); background: rgba(255,215,0,0.1); transform: translateY(-3px); }
-        .hero-3d-product {
-            position: absolute; width: 300px; height: 300px;
-            right: 10%; top: 50%; transform: translateY(-50%);
-            perspective: 1000px; z-index: 5;
-        }
-        .product-3d {
-            width: 100%; height: 100%; position: relative;
-            transform-style: preserve-3d;
-            animation: rotate3d 15s linear infinite;
-        }
-        @keyframes rotate3d {
-            0% { transform: rotateY(0deg) rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(10deg); }
-        }
-        .product-3d-face {
-            position: absolute; width: 200px; height: 280px;
-            left: 50px; top: 10px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border-radius: 15px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 900;
-            border: 3px solid rgba(255,215,0,0.5);
-            box-shadow: 0 0 50px rgba(227,24,55,0.5);
-        }
-        .product-3d-face:nth-child(1) { transform: translateZ(30px); }
-        .product-3d-face:nth-child(2) { transform: rotateY(90deg) translateZ(30px); width: 60px; left: 120px; background: linear-gradient(135deg, var(--rp-orange), var(--rp-yellow)); }
-        .product-3d-face:nth-child(3) { transform: rotateY(180deg) translateZ(30px); }
-        .product-3d-face:nth-child(4) { transform: rotateY(-90deg) translateZ(30px); width: 60px; left: 120px; background: linear-gradient(135deg, var(--rp-orange), var(--rp-yellow)); }
-        .product-3d-face:nth-child(5) { transform: rotateX(90deg) translateZ(30px); height: 60px; top: 120px; background: var(--rp-yellow); }
-        .product-3d-face:nth-child(6) { transform: rotateX(-90deg) translateZ(250px); height: 60px; top: 120px; background: var(--rp-red); }
-        .section { padding: 100px 5%; position: relative; z-index: 10; }
-        .section-header { text-align: center; margin-bottom: 60px; }
-        .section-tag {
-            display: inline-block; padding: 5px 20px;
-            background: rgba(227,24,55,0.2); border: 1px solid rgba(227,24,55,0.3);
-            border-radius: 50px; color: var(--rp-red);
-            font-size: 13px; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 15px;
-        }
-        .section-title {
-            font-size: clamp(28px, 5vw, 48px); font-weight: 800; margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff, var(--rp-yellow));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .section-subtitle { color: #888; font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.7; }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px; max-width: 1400px; margin: 0 auto;
-        }
-        .product-card {
-            background: linear-gradient(145deg, var(--rp-card), rgba(22,33,62,0.5));
-            border-radius: 20px; overflow: hidden;
-            border: 1px solid rgba(255,215,0,0.1);
-            transition: 0.5s; position: relative;
-            transform-style: preserve-3d; perspective: 1000px;
-        }
-        .product-card::before {
-            content: ''; position: absolute; top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
-            transition: 0.5s;
-        }
-        .product-card:hover::before { left: 100%; }
-        .product-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            border-color: rgba(255,215,0,0.3);
-            box-shadow: 0 20px 60px rgba(227,24,55,0.2), 0 0 30px rgba(255,215,0,0.1);
-        }
-        .product-image-wrap {
-            height: 220px;
-            background: linear-gradient(135deg, rgba(227,24,55,0.1), rgba(255,107,0,0.1));
-            display: flex; align-items: center; justify-content: center;
-            position: relative; overflow: hidden;
-        }
-        .product-image-wrap img {
-            max-width: 70%; max-height: 80%; object-fit: contain;
-            transition: 0.5s;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-        }
-        .product-card:hover .product-image-wrap img {
-            transform: scale(1.1) rotate(-5deg);
-            filter: drop-shadow(0 15px 30px rgba(227,24,55,0.3));
-        }
-        .product-badge {
-            position: absolute; top: 15px; left: 15px;
-            padding: 5px 15px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border-radius: 50px; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .product-badge.bestseller { background: linear-gradient(135deg, var(--rp-yellow), #FFA500); color: #000; }
-        .product-badge.new { background: linear-gradient(135deg, #00C853, #00E676); }
-        .product-badge.kids { background: linear-gradient(135deg, #FF4081, #F50057); }
-        .product-info { padding: 25px; }
-        .product-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #fff; }
-        .product-desc { font-size: 13px; color: #888; margin-bottom: 15px; line-height: 1.5; }
-        .product-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .product-price { font-size: 24px; font-weight: 800; color: var(--rp-yellow); }
-        .product-price .currency { font-size: 16px; }
-        .add-to-cart {
-            padding: 10px 25px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border: none; border-radius: 50px; color: #fff;
-            font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px;
-        }
-        .add-to-cart:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(227,24,55,0.4); }
-        .exploded-section {
-            background: linear-gradient(180deg, var(--rp-darker), var(--rp-dark));
-            padding: 100px 5%; position: relative; overflow: hidden;
-        }
-        .exploded-section::before {
-            content: ''; position: absolute;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(227,24,55,0.1), transparent 70%);
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
-        .exploded-container {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 60px; align-items: center;
-            position: relative; z-index: 10;
-        }
-        .exploded-visual { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; }
-        .noodle-layer {
-            position: absolute; width: 300px; height: 40px; border-radius: 20px;
-            transition: 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        .layer-1 { background: linear-gradient(90deg, #FFD700, #FFA500); top: 40%; }
-        .layer-2 { background: linear-gradient(90deg, #FF6B00, #FF8C00); top: 40%; }
-        .layer-3 { background: linear-gradient(90deg, #E31837, #FF4444); top: 40%; }
-        .layer-4 { background: linear-gradient(90deg, #4CAF50, #8BC34A); top: 40%; }
-        .layer-5 { background: linear-gradient(90deg, #2196F3, #03A9F4); top: 40%; }
-        .exploded-visual.active .layer-1 { transform: translateY(-120px); }
-        .exploded-visual.active .layer-2 { transform: translateY(-60px); }
-        .exploded-visual.active .layer-3 { transform: translateY(0); }
-        .exploded-visual.active .layer-4 { transform: translateY(60px); }
-        .exploded-visual.active .layer-5 { transform: translateY(120px); }
-        .explode-btn {
-            position: absolute; bottom: 30px;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border: none; border-radius: 50px; color: #fff;
-            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(227,24,55,0.3);
-        }
-        .explode-btn:hover { transform: scale(1.05); }
-        .exploded-text h2 {
-            font-size: 36px; font-weight: 800; margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff, var(--rp-yellow));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .exploded-text p { color: #aaa; font-size: 16px; line-height: 1.8; margin-bottom: 30px; }
-        .ingredient-list { list-style: none; }
-        .ingredient-list li {
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex; align-items: center; gap: 15px;
-            color: #ccc; font-size: 15px;
-        }
-        .ingredient-list li::before {
-            content: ''; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-        }
-        .ingredient-list li:nth-child(1)::before { background: linear-gradient(135deg, #FFD700, #FFA500); }
-        .ingredient-list li:nth-child(2)::before { background: linear-gradient(135deg, #FF6B00, #FF8C00); }
-        .ingredient-list li:nth-child(3)::before { background: linear-gradient(135deg, #E31837, #FF4444); }
-        .ingredient-list li:nth-child(4)::before { background: linear-gradient(135deg, #4CAF50, #8BC34A); }
-        .ingredient-list li:nth-child(5)::before { background: linear-gradient(135deg, #2196F3, #03A9F4); }
-        .combo-section { padding: 100px 5%; background: var(--rp-darker); }
-        .combo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px; max-width: 1200px; margin: 0 auto;
-        }
-        .combo-card {
-            background: linear-gradient(145deg, var(--rp-card), rgba(22,33,62,0.3));
-            border-radius: 25px; padding: 40px;
-            border: 2px solid rgba(255,215,0,0.1);
-            position: relative; overflow: hidden; transition: 0.5s;
-        }
-        .combo-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,215,0,0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        .combo-card.popular::before {
-            content: 'SABSE ZYADA BIKTA HAI';
-            position: absolute; top: 20px; right: -35px;
-            background: linear-gradient(135deg, var(--rp-yellow), #FFA500);
-            color: #000; padding: 5px 40px;
-            font-size: 11px; font-weight: 800;
-            transform: rotate(45deg);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .combo-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; color: #fff; }
-        .combo-price { font-size: 42px; font-weight: 900; color: var(--rp-yellow); margin: 20px 0; }
-        .combo-items { list-style: none; margin: 25px 0; }
-        .combo-items li {
-            padding: 10px 0; color: #aaa; font-size: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex; align-items: center; gap: 10px;
-        }
-        .combo-items li::before {
-            content: ''; width: 8px; height: 8px;
-            background: var(--rp-red); border-radius: 50%;
-        }
-        .combo-btn {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border: none; border-radius: 15px; color: #fff;
-            font-size: 16px; font-weight: 700; cursor: pointer;
-            transition: 0.3s; margin-top: 20px;
-        }
-        .combo-btn:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(227,24,55,0.3); }
-        .cart-sidebar {
-            position: fixed; top: 0; right: -450px;
-            width: 450px; height: 100%;
-            background: linear-gradient(180deg, var(--rp-dark), var(--rp-darker));
-            z-index: 2000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 30px; overflow-y: auto;
-            border-left: 1px solid rgba(255,215,0,0.1);
-        }
-        .cart-sidebar.open { right: 0; }
-        .cart-overlay {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 1999;
-            opacity: 0; visibility: hidden; transition: 0.3s;
-        }
-        .cart-overlay.open { opacity: 1; visibility: visible; }
-        .cart-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .cart-header h2 { font-size: 24px; }
-        .close-cart {
-            background: none; border: none; color: #fff; font-size: 30px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .close-cart:hover { color: var(--rp-red); transform: rotate(90deg); }
-        .cart-item {
-            display: flex; gap: 15px; padding: 20px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center;
-        }
-        .cart-item-img {
-            width: 60px; height: 60px;
-            background: linear-gradient(135deg, rgba(227,24,55,0.2), rgba(255,107,0,0.2));
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-        }
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-weight: 600; margin-bottom: 5px; }
-        .cart-item-price { color: var(--rp-yellow); font-weight: 700; }
-        .cart-qty { display: flex; align-items: center; gap: 10px; }
-        .qty-btn {
-            width: 30px; height: 30px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.2); background: none;
-            color: #fff; cursor: pointer; transition: 0.3s;
-        }
-        .qty-btn:hover { background: var(--rp-red); border-color: var(--rp-red); }
-        .cart-total { margin-top: 30px; padding-top: 20px; border-top: 2px solid rgba(255,215,0,0.2); }
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 16px; }
-        .total-row.final {
-            font-size: 24px; font-weight: 800; color: var(--rp-yellow);
-            margin-top: 15px; padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .checkout-btn {
-            width: 100%; padding: 18px;
-            background: linear-gradient(135deg, var(--rp-red), var(--rp-orange));
-            border: none; border-radius: 15px; color: #fff;
-            font-size: 18px; font-weight: 800; cursor: pointer;
-            margin-top: 25px; transition: 0.3s;
-            box-shadow: 0 10px 30px rgba(227,24,55,0.3);
-        }
-        .checkout-btn:hover { transform: scale(1.02); }
-        footer {
-            background: var(--rp-darker); padding: 60px 5% 30px;
-            border-top: 1px solid rgba(255,215,0,0.1);
-            position: relative; z-index: 10;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px; max-width: 1200px; margin: 0 auto 40px;
-        }
-        .footer-col h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--rp-yellow); }
-        .footer-col p, .footer-col a { color: #888; text-decoration: none; line-height: 2; font-size: 14px; transition: 0.3s; }
-        .footer-col a:hover { color: var(--rp-yellow); }
-        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); color: #666; font-size: 13px; }
-        .fade-up { opacity: 0; transform: translateY(40px); transition: 0.8s; }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-        @media (max-width: 768px) {
-            .hero-3d-product { display: none; }
-            .exploded-container { grid-template-columns: 1fr; }
-            .cart-sidebar { width: 100%; right: -100%; }
-            .nav-links { display: none; }
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rum Pum - Taste the Magic | 3D Product Showcase</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
+  position: relative;
+  padding: 2rem;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%23ff6b35" opacity="0.3"/></svg>');
+  background-size: 50px 50px;
+  opacity: 0.5;
+  animation: sparkle 3s linear infinite;
+}
+@keyframes sparkle {
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+.hero-content { position: relative; z-index: 2; }
+.hero h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 40px rgba(255,107,53,0.3);
+  letter-spacing: -2px;
+}
+.hero .tagline {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: #aaa;
+  margin-top: 1rem;
+}
+.hero .sub {
+  font-size: 1.1rem;
+  color: #ff6b35;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+/* Section */
+.section {
+  padding: 4rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Product Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+}
+.product-card {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,107,53,0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+.product-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255,107,53,0.5);
+  box-shadow: 0 20px 60px rgba(255,107,53,0.2);
+}
+.product-card .img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+  background: #0f0f1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.product-card:hover .img-wrap img {
+  transform: scale(1.1);
+}
+.product-card .img-wrap .no-img {
+  font-size: 4rem;
+  opacity: 0.3;
+}
+.product-info {
+  padding: 1.5rem;
+}
+.product-info h3 {
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.product-info p {
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ff6b35;
+}
+.badge {
+  background: rgba(255,107,53,0.2);
+  color: #ff6b35;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Gallery Section */
+.gallery-section {
+  background: #0d0d1a;
+  padding: 4rem 1rem;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.gallery-item {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,107,53,0.1);
+  transition: all 0.3s ease;
+  aspect-ratio: 1;
+}
+.gallery-item:hover {
+  transform: scale(1.05);
+  border-color: rgba(255,107,53,0.4);
+  box-shadow: 0 10px 30px rgba(255,107,53,0.15);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #050508;
+  border-top: 1px solid rgba(255,107,53,0.1);
+}
+.footer h2 {
+  font-size: 2rem;
+  background: linear-gradient(90deg, #ff6b35, #f7931e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+.footer p { color: #666; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 4px; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+<base target="_blank">
 </head>
 <body>
-    <canvas id="steamCanvas"></canvas>
-    <nav>
-        <div class="logo">RUM PUM<span>Taste the Magic</span></div>
-        <ul class="nav-links">
-            <li><a href="#noodles">Noodles</a></li>
-            <li><a href="#snacks">Snacks</a></li>
-            <li><a href="#bowls">Bowls</a></li>
-            <li><a href="#combos">Combos</a></li>
-            <li><a href="#exploded">Ingredients</a></li>
-        </ul>
-        <div class="cart-icon" onclick="toggleCart()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-            <span class="cart-count" id="cartCount">0</span>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-3d-product">
-            <div class="product-3d">
-                <div class="product-3d-face">RUM<br>PUM</div>
-                <div class="product-3d-face"></div>
-                <div class="product-3d-face">MAZAA</div>
-                <div class="product-3d-face"></div>
-                <div class="product-3d-face"></div>
-                <div class="product-3d-face"></div>
-            </div>
-        </div>
-        <div class="hero-content">
-            <div class="hero-badge">Bharat ka No.1 Noodles Brand</div>
-            <h1><span class="highlight">2 Minute</span> mein<br>Khushiyon ka <span class="highlight">Mazaa</span></h1>
-            <p>Rum Pum lekar aaya hai <strong>20+ swadisht products</strong> jo aapke har pal ko bana dein khaas.<br>
-            Noodles se lekar Snacks tak, Bowl se lekar Family Pack tak —<br><strong>Har umar, har swaad, har budget.</strong></p>
-            <div class="hero-buttons">
-                <a href="#noodles" class="btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                    Abhi Kharidein
-                </a>
-                <a href="#exploded" class="btn-secondary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    3D View Dekhein
-                </a>
-            </div>
-        </div>
-    </section>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>RUM PUM</h1>
+    <p class="tagline">Taste the Magic | भारत का नं.1 नूडल्स ब्रांड</p>
+    <p class="sub">20+ स्वादिष्ट प्रोडक्ट्स — हर उम्र, हर स्वाद, हर बजट</p>
+  </div>
+</section>
 
-    <section class="section" id="noodles">
-        <div class="section-header fade-up">
-            <div class="section-tag">Instant Noodles</div>
-            <h2 class="section-title">2 Minute Mazaa</h2>
-            <p class="section-subtitle">Bharat ke har ghar ki pehli pasand. Masaledaar, chatpata, aur ab har budget mein — 5 rupaye se lekar Family Pack tak.</p>
-        </div>
-        <div class="product-grid">
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge bestseller">Bestseller</span>
-                    <img src="rumpum_images/img-019.jpg" alt="2 Minute Mazza 10" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">2 Minute Mazza</h3>
-                    <p class="product-desc">Masaledaar noodles jo 2 minute mein taiyaar. Har bite mein asli desi swaad.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>10</div>
-                        <button class="add-to-cart" onclick="addToCart('2 Minute Mazza ₹10', 10, 'img-019.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Popular</span>
-                    <img src="rumpum_images/img-021.jpg" alt="2 Minute Mazza 5" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">2 Minute Mazza</h3>
-                    <p class="product-desc">Chota pack, bada swaad! Bachchon ki pocket money wali pasand.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('2 Minute Mazza ₹5', 5, 'img-021.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Family</span>
-                    <img src="rumpum_images/img-025.jpg" alt="2 Minute Mazza Family Pack" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">2 Minute Mazza Family Pack</h3>
-                    <p class="product-desc">Puri family ke liye ek hi pack. Dher saara mazaa, dher saara pyaar.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>20</div>
-                        <button class="add-to-cart" onclick="addToCart('2 Minute Mazza Family Pack', 20, 'img-025.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-035.jpg" alt="Rum Pum Ready to Eat" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Rum Pum Ready to Eat</h3>
-                    <p class="product-desc">Bina banaye, seedha khao. Travel, school, office — kahin bhi, kabhi bhi.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Rum Pum Ready to Eat', 5, 'img-035.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Chatpata</span>
-                    <img src="rumpum_images/img-037.jpg" alt="Wow Chow Green" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Wow Chow (Green Pack)</h3>
-                    <p class="product-desc">Hari mirch ka teekha swaad. Jise teekha pasand ho, unke liye bana hai.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Wow Chow Green', 5, 'img-037.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Chatpata</span>
-                    <img src="rumpum_images/img-094.jpg" alt="Wow Chow Yellow" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Wow Chow (Yellow Pack)</h3>
-                    <p class="product-desc">Classic masala swaad. Pili packet mein chhupa hai desi masalon ka khazana.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Wow Chow Yellow', 5, 'img-094.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Popular</span>
-                    <img src="rumpum_images/img-046.jpg" alt="Njoy 5" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Njoy ₹5 Pack</h3>
-                    <p class="product-desc">Chhota price, bada njoyment! Bachchon ki favourite evening snack.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Njoy ₹5 Pack', 5, 'img-046.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-048.jpg" alt="Njoy 10" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Njoy ₹10 Pack</h3>
-                    <p class="product-desc">Double mazaa, double njoyment. Dost ke saath share karne wala pack.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>10</div>
-                        <button class="add-to-cart" onclick="addToCart('Njoy ₹10 Pack', 10, 'img-048.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge kids">Kids Special</span>
-                    <img src="rumpum_images/img-053.jpg" alt="Joker Instant Noodles" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Joker Instant Noodles</h3>
-                    <p class="product-desc">Joker ke saath khana bana fun! Bachchon ka super favourite character pack.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Joker Instant Noodles', 5, 'img-053.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge kids">Kids Special</span>
-                    <img src="rumpum_images/img-055.jpg" alt="n-joy Ready to Eat Kid Pack" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">n-joy Ready to Eat (Kid Pack)</h3>
-                    <p class="product-desc">Bachchon ke liye special ready-to-eat. School tiffin mein maa ka pyaar.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('n-joy Ready to Eat Kid Pack', 5, 'img-055.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Spicy</span>
-                    <img src="rumpum_images/img-070.jpg" alt="Hot & Spicy" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Hot & Spicy Noodles</h3>
-                    <p class="product-desc">Laal mirch ka asli dum. Jise teekha-teekha chahiye, bas unhi ke liye.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5-10</div>
-                        <button class="add-to-cart" onclick="addToCart('Hot & Spicy Noodles', 5, 'img-070.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="bowls" style="background: linear-gradient(180deg, var(--rp-darker), var(--rp-dark));">
-        <div class="section-header fade-up">
-            <div class="section-tag">Ready to Eat Bowls</div>
-            <h2 class="section-title">Bowl Mein Mazaa</h2>
-            <p class="section-subtitle">Bina koi jhanjhat, seedha bowl mein nikalo aur khao. Office, college, travel — kahin bhi instant khana.</p>
-        </div>
-        <div class="product-grid">
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge new">New</span>
-                    <img src="rumpum_images/img-072.jpg" alt="Noodles in Bowl Red" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🥣</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Noodles in Bowl (Red)</h3>
-                    <p class="product-desc">Lal bowl mein garam-garam noodles. Fork included, bas paani milao aur khao.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>--</div>
-                        <button class="add-to-cart" onclick="addToCart('Noodles in Bowl Red', 30, 'img-072.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-050.jpg" alt="Bowl of Noodles White" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🥣</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Bowl of Noodles (White)</h3>
-                    <p class="product-desc">Safed bowl mein classic swaad. Premium packaging, premium taste.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>--</div>
-                        <button class="add-to-cart" onclick="addToCart('Bowl of Noodles White', 35, 'img-050.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge new">New</span>
-                    <img src="rumpum_images/img-223.jpg" alt="Pasta in Bowl Italian" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🥣</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Pasta in Bowl (Italian)</h3>
-                    <p class="product-desc">Italian herbs wala pasta ab bowl mein. Desi price mein videshi swaad.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>--</div>
-                        <button class="add-to-cart" onclick="addToCart('Pasta in Bowl Italian', 40, 'img-223.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="snacks">
-        <div class="section-header fade-up">
-            <div class="section-tag">Namkeen & Snacks</div>
-            <h2 class="section-title">Chatpata Snack Time</h2>
-            <p class="section-subtitle">Shaam ki chai ke saath, ya film dekhne ke waqt — Rum Pum snacks har mood mein fit.</p>
-        </div>
-        <div class="product-grid">
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge kids">Kids</span>
-                    <img src="rumpum_images/img-134.jpg" alt="Alphabet Snack" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🔤</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Alphabet Snack</h3>
-                    <p class="product-desc">A for Aloo, B for Bhujia! Bachchon ko padhate-padhate khilao. Fun + Food.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Alphabet Snack', 5, 'img-134.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-159.jpg" alt="Cups Katori Yellow" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🥡</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Cups Katori (Yellow Pack)</h3>
-                    <p class="product-desc">Katori shape mein crispy snack. Hath mein aaye, muh mein ghul jaaye.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Cups Katori Yellow', 5, 'img-159.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Classic</span>
-                    <img src="rumpum_images/img-177.jpg" alt="Jeera Papad Blue" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍘</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Jeera Papad (Blue Pack)</h3>
-                    <p class="product-desc">Jeera ka chatpata swaad. Papad jaisa crispy, snack jaisa convenient.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Jeera Papad Blue', 5, 'img-177.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-211.jpg" alt="Noodle Snack Blue Bowl" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍜</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Noodle Snack (Blue Bowl)</h3>
-                    <p class="product-desc">Noodles ka snack avatar. Crunchy, crispy, aur fully masaledaar.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Noodle Snack Blue Bowl', 5, 'img-211.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <img src="rumpum_images/img-219.jpg" alt="Pasta Snack Pack" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🍝</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Pasta Snack Pack</h3>
-                    <p class="product-desc">Pasta ka crunchy roop. Italian flavour, desi snack style mein.</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Pasta Snack Pack', 5, 'img-219.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card fade-up">
-                <div class="product-image-wrap">
-                    <span class="product-badge">Jungle</span>
-                    <img src="rumpum_images/img-236.jpg" alt="Safari Snacks Green" onerror="this.parentElement.innerHTML += '<div style=font-size:60px>🦁</div>'">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">Safari Snacks Pack (Green)</h3>
-                    <p class="product-desc">Jungle safari wala fun ab snack mein. Giraffe, elephant — har piece mein animal shape!</p>
-                    <div class="product-price-row">
-                        <div class="product-price"><span class="currency">₹</span>5</div>
-                        <button class="add-to-cart" onclick="addToCart('Safari Snacks Green', 5, 'img-236.jpg')">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="exploded-section" id="exploded">
-        <div class="exploded-container">
-            <div class="exploded-visual" id="explodedVisual">
-                <div class="noodle-layer layer-1"></div>
-                <div class="noodle-layer layer-2"></div>
-                <div class="noodle-layer layer-3"></div>
-                <div class="noodle-layer layer-4"></div>
-                <div class="noodle-layer layer-5"></div>
-                <button class="explode-btn" onclick="toggleExplode()">3D Exploded View Dekhein</button>
-            </div>
-            <div class="exploded-text">
-                <h2>Andar Kya Hai?</h2>
-                <p>Rum Pum noodles mein sirf swaad hi nahi, bharosa bhi hai. Har layer mein milte hain asli masale, fresh atta, aur pyaar. Exploded view mein dekhiye kaise har ingredient aapke swaad ke liye taiyaar hai.</p>
-                <ul class="ingredient-list">
-                    <li>Premium Wheat Flour (Maida + Atta Mix)</li>
-                    <li>Secret Masala Blend (12+ Spices)</li>
-                    <li>Dehydrated Vegetables (Carrot, Peas, Corn)</li>
-                    <li>Palm Oil (Trans-fat Free)</li>
-                    <li>Natural Flavours & Preservatives</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <section class="combo-section" id="combos">
-        <div class="section-header fade-up">
-            <div class="section-tag">Special Offers</div>
-            <h2 class="section-title">Combo Packs — Zyada Bachat</h2>
-            <p class="section-subtitle">Ek se bhale do, do se bhale chaar! Combo pack mein payein zyada mazaa, kam daam.</p>
-        </div>
-        <div class="combo-grid">
-            <div class="combo-card fade-up">
-                <div class="combo-title">Bachcha Party Combo</div>
-                <div class="combo-price">₹25</div>
-                <ul class="combo-items">
-                    <li>2 Minute Mazza ₹5 x 2</li>
-                    <li>Alphabet Snack x 1</li>
-                    <li>Joker Instant Noodles x 1</li>
-                    <li>n-joy Kid Pack x 1</li>
-                </ul>
-                <p style="color: #888; font-size: 13px; margin-top: 10px;">Alag se kharidne par: ₹30 | Bachat: ₹5</p>
-                <button class="combo-btn" onclick="addToCart('Bachcha Party Combo', 25, 'combo1')">Combo Add Karein</button>
-            </div>
-            <div class="combo-card popular fade-up">
-                <div class="combo-title">Family Dhamaka Combo</div>
-                <div class="combo-price">₹50</div>
-                <ul class="combo-items">
-                    <li>2 Minute Mazza Family Pack x 1</li>
-                    <li>Wow Chow (Green + Yellow) x 2</li>
-                    <li>Hot & Spicy Noodles x 2</li>
-                    <li>Jeera Papad x 2</li>
-                </ul>
-                <p style="color: #888; font-size: 13px; margin-top: 10px;">Alag se kharidne par: ₹65 | Bachat: ₹15</p>
-                <button class="combo-btn" onclick="addToCart('Family Dhamaka Combo', 50, 'combo2')">Combo Add Karein</button>
-            </div>
-            <div class="combo-card fade-up">
-                <div class="combo-title">Office Lunch Combo</div>
-                <div class="combo-price">₹75</div>
-                <ul class="combo-items">
-                    <li>Noodles in Bowl (Red) x 2</li>
-                    <li>Pasta in Bowl (Italian) x 1</li>
-                    <li>Cups Katori x 2</li>
-                    <li>Safari Snacks x 2</li>
-                </ul>
-                <p style="color: #888; font-size: 13px; margin-top: 10px;">Alag se kharidne par: ₹95 | Bachat: ₹20</p>
-                <button class="combo-btn" onclick="addToCart('Office Lunch Combo', 75, 'combo3')">Combo Add Karein</button>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h3>Rum Pum Foods</h3>
-                <p>Bharat ke har ghar tak pahunchane wala swaad. 20+ products, ek hi bharosa — Rum Pum.</p>
-                <p style="margin-top: 15px; color: var(--rp-yellow);">Taste the Magic!</p>
-            </div>
-            <div class="footer-col">
-                <h3>Products</h3>
-                <a href="#noodles">Instant Noodles</a><br>
-                <a href="#bowls">Ready to Eat Bowls</a><br>
-                <a href="#snacks">Namkeen & Snacks</a><br>
-                <a href="#combos">Combo Packs</a>
-            </div>
-            <div class="footer-col">
-                <h3>Contact</h3>
-                <p>Email: info@rumpumfoods.com</p>
-                <p>Phone: +91 79058 40149</p>
-                <p>Address: India</p>
-            </div>
-            <div class="footer-col">
-                <h3>Follow Us</h3>
-                <a href="#">Instagram</a><br>
-                <a href="#">Facebook</a><br>
-                <a href="#">YouTube</a><br>
-                <a href="#">Twitter</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>2026 Rum Pum Foods Pvt. Ltd. All Rights Reserved. | Made with pride in India</p>
-        </div>
-    </footer>
-
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h2>Aapki Cart</h2>
-            <button class="close-cart" onclick="toggleCart()">&times;</button>
-        </div>
-        <div id="cartItems">
-            <p style="text-align: center; color: #666; padding: 40px 0;">Cart khali hai. Products add karein!</p>
-        </div>
-        <div class="cart-total" id="cartTotal" style="display: none;">
-            <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
-            <div class="total-row"><span>Shipping</span><span style="color: #4CAF50;">FREE</span></div>
-            <div class="total-row final"><span>Total</span><span id="totalPrice">₹0</span></div>
-            <button class="checkout-btn" onclick="checkout()">Checkout Karein</button>
-        </div>
+<!-- Noodles Section -->
+<section class="section">
+  <h2 class="section-title">🍜 Noodles Collection</h2>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-019.jpg" alt="2 Minute Mazza" loading="lazy"></div>
+      <div class="product-info">
+        <h3>2 Minute Mazza</h3>
+        <p>मसालेदार नूडल्स जो 2 मिनट में तैयार। हर बाइट में असली देसी स्वाद।</p>
+        <div class="product-meta"><span class="price">₹10</span><span class="badge">Popular</span></div>
+      </div>
     </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-021.jpg" alt="2 Minute Mazza ₹5" loading="lazy"></div>
+      <div class="product-info">
+        <h3>2 Minute Mazza ₹5 Pack</h3>
+        <p>छोटा पैक, बड़ा स्वाद! बच्चों की पॉकेट मनी वाली पसंद।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Popular</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-025.jpg" alt="2 Minute Mazza Family" loading="lazy"></div>
+      <div class="product-info">
+        <h3>2 Minute Mazza Family Pack</h3>
+        <p>पूरी फैमिली के लिए एक ही पैक। ढेर सारा मज़ा, ढेर सारा प्यार।</p>
+        <div class="product-meta"><span class="price">₹20</span><span class="badge">Family</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-035.jpg" alt="Wow Chow Green" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Wow Chow (Green Pack)</h3>
+        <p>हरी मिर्च का तीखा स्वाद। जिसे तीखा पसंद हो, उनके लिए बना है।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Chatpata</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-037.jpg" alt="Wow Chow Yellow" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Wow Chow (Yellow Pack)</h3>
+        <p>क्लासिक मसाला स्वाद। पीली पैकेट में छुपा है देसी मसालों का खजाना।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Popular</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-046.jpg" alt="Njoy ₹5" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Njoy ₹5 Pack</h3>
+        <p>छोटा price, बड़ा njoyment! बच्चों की favourite evening snack।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-050.jpg" alt="Njoy ₹10" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Njoy ₹10 Pack</h3>
+        <p>Double mazaa, double njoyment। दोस्त के साथ share करने वाला pack।</p>
+        <div class="product-meta"><span class="price">₹10</span><span class="badge">Kids</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-053.jpg" alt="Joker" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Joker Instant Noodles</h3>
+        <p>Joker के साथ खाना बना fun! बच्चों का super favourite character pack।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-055.jpg" alt="n-joy RTE" loading="lazy"></div>
+      <div class="product-info">
+        <h3>n-joy Ready to Eat (Kid Pack)</h3>
+        <p>बच्चों के लिए special ready-to-eat। School tiffin में माँ का प्यार।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">RTE</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-070.jpg" alt="Hot & Spicy" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Hot & Spicy Noodles</h3>
+        <p>लाल मिर्च का असली दम। जिसे तीखा-तीखा चाहिए, बस उन्हीं के लिए।</p>
+        <div class="product-meta"><span class="price">₹5-10</span><span class="badge">Spicy</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        // Steam Particles
-        const canvas = document.getElementById('steamCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+<!-- Snacks Section -->
+<section class="section" style="background:#0d0d1a;">
+  <h2 class="section-title">🥣 Snacks & Bowls</h2>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-072.jpg" alt="Noodles in Bowl" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Noodles in Bowl (Red)</h3>
+        <p>लाल bowl में गर्म-गर्म नूडल्स। Fork included, बस पानी मिलाओ और खाओ।</p>
+        <div class="product-meta"><span class="price">₹--</span><span class="badge">New</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-094.jpg" alt="Katori" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Katori Noodles</h3>
+        <p>कटोरी में परोसा हुआ स्वाद। Party, picnic, कहीं भी, कभी भी।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Bestseller</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-134.jpg" alt="Cups" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Cup Noodles</h3>
+        <p>कप में तैयार नूडल्स। Office, travel, hostel — instant hunger fix।</p>
+        <div class="product-meta"><span class="price">₹10</span><span class="badge">Convenient</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-177.jpg" alt="Alphabet" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Alphabet Noodles</h3>
+        <p>ABCD वाले नूडल्स! बच्चों को पढ़ाते-पढ़ाते खिलाओ। Fun + Nutrition।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-219.jpg" alt="Noodle Snack" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Noodle Snack</h3>
+        <p>कुरकुरे नूडल्स स्नैक्स। Chai के साथ perfect companion।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap"><img src="./img-236.jpg" alt="Pasta Snack" loading="lazy"></div>
+      <div class="product-info">
+        <h3>Pasta Snack</h3>
+        <p>इटालियन स्वाद में देसी मसाला। Pasta का नया अवतार।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Trending</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+<!-- Photo Gallery -->
+<section class="gallery-section">
+  <h2 class="section-title">📸 Product Gallery</h2>
+  <div class="gallery-grid">
+    <div class="gallery-item"><img src="./img-019.jpg" alt="Product 1" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-021.jpg" alt="Product 2" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-025.jpg" alt="Product 3" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-035.jpg" alt="Product 4" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-037.jpg" alt="Product 5" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-046.jpg" alt="Product 6" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-050.jpg" alt="Product 7" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-053.jpg" alt="Product 8" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-055.jpg" alt="Product 9" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-070.jpg" alt="Product 10" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-072.jpg" alt="Product 11" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-094.jpg" alt="Product 12" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-134.jpg" alt="Product 13" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-177.jpg" alt="Product 14" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-219.jpg" alt="Product 15" loading="lazy"></div>
+    <div class="gallery-item"><img src="./img-236.jpg" alt="Product 16" loading="lazy"></div>
+  </div>
+</section>
 
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 10;
-                this.size = Math.random() * 15 + 5;
-                this.speedY = Math.random() * 1 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.opacity = Math.random() * 0.3 + 0.1;
-                this.life = 0;
-                this.maxLife = Math.random() * 200 + 100;
-            }
-            update() {
-                this.y -= this.speedY;
-                this.x += this.speedX;
-                this.life++;
-                this.opacity = Math.max(0, 0.3 * (1 - this.life / this.maxLife));
-                if (this.life >= this.maxLife || this.y < -50) this.reset();
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`;
-                ctx.fill();
-            }
-        }
+<!-- More Products (Text Only) -->
+<section class="section">
+  <h2 class="section-title">🛒 More Delicious Products</h2>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🍜</span></div>
+      <div class="product-info">
+        <h3>Safari Noodles</h3>
+        <p>जंगल सफारी का मज़ा, नूडल्स के साथ। बच्चों का adventure partner।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Kids</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥠</span></div>
+      <div class="product-info">
+        <h3>Jeera Papad</h3>
+        <p>जीरे का classic taste। Crunchy, crispy, masaledaar।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Namkeen</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🔺</span></div>
+      <div class="product-info">
+        <h3>Triangle Snack</h3>
+        <p>त्रिकोणीय आकार में triangle crunch। Shape में fun, taste में gun।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🌶️</span></div>
+      <div class="product-info">
+        <h3>Tirche Mirche Masala STIX</h3>
+        <p>तीखे-मीठे मसाले में लिपटे crunchy stix। एक बार खाओ, बार-बार मांगो।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Spicy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🍅</span></div>
+      <div class="product-info">
+        <h3>Tirche Mirche Tomato STIX</h3>
+        <p>टमाटर का tangy taste। Tomato lovers के लिए special treat।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Tangy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥔</span></div>
+      <div class="product-info">
+        <h3>Potato Crackers</h3>
+        <p>आलू का asli swaad। Potato lovers की पहली पसंद।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🥖</span></div>
+      <div class="product-info">
+        <h3>Crunchy Stix</h3>
+        <p>Extra crunchy, extra tasty। Chai time का best साथी।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Crunchy</span></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><span class="no-img">🧂</span></div>
+      <div class="product-info">
+        <h3>Pipe Salted</h3>
+        <p>नमकीन pipe snacks। Simple swaad, बेमिसाल मज़ा।</p>
+        <div class="product-meta"><span class="price">₹5</span><span class="badge">Classic</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        for (let i = 0; i < 50; i++) particles.push(new Particle());
+<!-- Footer -->
+<footer class="footer">
+  <h2>RUM PUM</h2>
+  <p>Taste the Magic | 20+ Products | Har Umar, Har Swaad, Har Budget</p>
+  <p style="margin-top:1rem; color:#444;">© 2026 Rum Pum Foods. All Rights Reserved.</p>
+</footer>
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        // Cart System
-        let cart = [];
-
-        function addToCart(name, price, image) {
-            const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ name, price, image, qty: 1 });
-            }
-            updateCart();
-            // Show feedback
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = 'Added!';
-            btn.style.background = 'linear-gradient(135deg, #00C853, #00E676)';
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '';
-            }, 1000);
-        }
-
-        function updateQty(name, change) {
-            const item = cart.find(item => item.name === name);
-            if (item) {
-                item.qty += change;
-                if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
-            }
-            updateCart();
-        }
-
-        function removeFromCart(name) {
-            cart = cart.filter(item => item.name !== name);
-            updateCart();
-        }
-
-        function updateCart() {
-            const cartItems = document.getElementById('cartItems');
-            const cartTotal = document.getElementById('cartTotal');
-            const cartCount = document.getElementById('cartCount');
-            const subtotalEl = document.getElementById('subtotal');
-            const totalPriceEl = document.getElementById('totalPrice');
-
-            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            cartCount.textContent = totalQty;
-
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<p style="text-align: center; color: #666; padding: 40px 0;">Cart khali hai. Products add karein!</p>';
-                cartTotal.style.display = 'none';
-                return;
-            }
-
-            let html = '';
-            let total = 0;
-            cart.forEach(item => {
-                total += item.price * item.qty;
-                html += `
-                    <div class="cart-item">
-                        <div class="cart-item-img">RP</div>
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-price">₹${item.price} x ${item.qty}</div>
-                        </div>
-                        <div class="cart-qty">
-                            <button class="qty-btn" onclick="updateQty('${item.name}', -1)">-</button>
-                            <span>${item.qty}</span>
-                            <button class="qty-btn" onclick="updateQty('${item.name}', 1)">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-            cartItems.innerHTML = html;
-            cartTotal.style.display = 'block';
-            subtotalEl.textContent = '₹' + total;
-            totalPriceEl.textContent = '₹' + total;
-        }
-
-        function toggleCart() {
-            document.getElementById('cartSidebar').classList.toggle('open');
-            document.getElementById('cartOverlay').classList.toggle('open');
-        }
-
-        function checkout() {
-            if (cart.length === 0) return;
-            alert('Dhanyawaad! Aapka order place ho gaya hai. Total: ₹' + cart.reduce((sum, item) => sum + item.price * item.qty, 0));
-            cart = [];
-            updateCart();
-            toggleCart();
-        }
-
-        // Exploded View
-        let exploded = false;
-        function toggleExplode() {
-            exploded = !exploded;
-            document.getElementById('explodedVisual').classList.toggle('active', exploded);
-            document.querySelector('.explode-btn').textContent = exploded ? 'Wapas Band Karein' : '3D Exploded View Dekhein';
-        }
-
-        // Scroll Animations
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Nav background on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.background = 'rgba(15,15,26,0.98)';
-            } else {
-                nav.style.background = 'rgba(15,15,26,0.95)';
-            }
-        });
-    </script>
 </body>
 </html>
-
