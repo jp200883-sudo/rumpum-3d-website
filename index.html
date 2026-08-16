@@ -3,732 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rum Pum 3D Experience</title>
+<title>Rum Pum — Rum Pum Enjoy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #050505;
-  color: #fff;
-  overflow-x: hidden;
-  perspective: 1200px;
-}
-
-/* ===== HERO 3D ===== */
-.hero-3d {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background: radial-gradient(ellipse at 30% 20%, #1a0a00 0%, #050505 50%, #0a0a1a 100%);
-  overflow: hidden;
-  perspective: 1000px;
-}
-
-.hero-3d::before {
-  content: '';
-  position: absolute;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
-  border-radius: 50%;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%,100% { transform: translate(-50%,-50%) scale(1); opacity:0.5; }
-  50% { transform: translate(-50%,-50%) scale(1.3); opacity:0.8; }
-}
-
-.floating-products {
-  position: absolute;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-
-.float-item {
-  position: absolute;
-  width: 120px;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(255,107,53,0.3);
-  animation: float-3d 6s ease-in-out infinite;
-  transform-style: preserve-3d;
-}
-
-.float-item:nth-child(1) { top:10%; left:10%; animation-delay:0s; }
-.float-item:nth-child(2) { top:15%; right:15%; animation-delay:1s; }
-.float-item:nth-child(3) { bottom:20%; left:15%; animation-delay:2s; }
-.float-item:nth-child(4) { bottom:15%; right:10%; animation-delay:3s; }
-.float-item:nth-child(5) { top:50%; left:5%; animation-delay:1.5s; }
-.float-item:nth-child(6) { top:50%; right:5%; animation-delay:2.5s; }
-
-@keyframes float-3d {
-  0%,100% { transform: translateY(0) rotateY(0deg) rotateX(5deg); }
-  25% { transform: translateY(-20px) rotateY(10deg) rotateX(-5deg); }
-  50% { transform: translateY(0) rotateY(0deg) rotateX(5deg); }
-  75% { transform: translateY(20px) rotateY(-10deg) rotateX(-5deg); }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  transform-style: preserve-3d;
-}
-
-.hero-content h1 {
-  font-size: clamp(3rem, 10vw, 7rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, #ff6b35, #ff9500, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 60px rgba(255,107,53,0.4);
-  letter-spacing: -3px;
-  transform: translateZ(100px);
-  animation: title-3d 3s ease-out;
-}
-
-@keyframes title-3d {
-  from { transform: translateZ(-500px) rotateX(30deg); opacity:0; }
-  to { transform: translateZ(100px) rotateX(0deg); opacity:1; }
-}
-
-.hero-content .tagline {
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  color: #aaa;
-  margin-top: 1rem;
-  transform: translateZ(50px);
-}
-
-.hero-content .sub {
-  font-size: 1.1rem;
-  color: #ff6b35;
-  margin-top: 0.5rem;
-  font-weight: 600;
-  transform: translateZ(50px);
-}
-
-.scroll-hint {
-  position: absolute;
-  bottom: 30px;
-  animation: bounce 2s infinite;
-  font-size: 2rem;
-  color: #ff6b35;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(15px); }
-}
-
-/* ===== SECTIONS ===== */
-.section {
-  padding: 6rem 1rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  perspective: 1200px;
-}
-
-.section-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  text-align: center;
-  margin-bottom: 4rem;
-  background: linear-gradient(90deg, #ff6b35, #ff9500, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transform: translateZ(30px);
-}
-
-/* ===== 3D CAROUSEL ===== */
-.carousel-3d-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 500px;
-  perspective: 1000px;
-  margin: 4rem 0;
-}
-
-.carousel-3d {
-  position: relative;
-  width: 300px;
-  height: 400px;
-  transform-style: preserve-3d;
-  animation: spin-carousel 20s linear infinite;
-}
-
-.carousel-3d:hover {
-  animation-play-state: paused;
-}
-
-.carousel-item {
-  position: absolute;
-  width: 260px;
-  height: 360px;
-  left: 20px; top: 20px;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 2px solid rgba(255,107,53,0.3);
-  box-shadow: 0 0 40px rgba(255,107,53,0.2);
-  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  transition: all 0.5s;
-}
-
-.carousel-item img {
-  width: 100%;
-  height: 70%;
-  object-fit: cover;
-}
-
-.carousel-item .c-info {
-  padding: 1rem;
-  text-align: center;
-}
-
-.carousel-item .c-info h4 {
-  font-size: 1rem;
-  color: #fff;
-}
-
-.carousel-item .c-info .c-price {
-  color: #ff6b35;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-
-.carousel-item:nth-child(1) { transform: rotateY(0deg) translateZ(350px); }
-.carousel-item:nth-child(2) { transform: rotateY(45deg) translateZ(350px); }
-.carousel-item:nth-child(3) { transform: rotateY(90deg) translateZ(350px); }
-.carousel-item:nth-child(4) { transform: rotateY(135deg) translateZ(350px); }
-.carousel-item:nth-child(5) { transform: rotateY(180deg) translateZ(350px); }
-.carousel-item:nth-child(6) { transform: rotateY(225deg) translateZ(350px); }
-.carousel-item:nth-child(7) { transform: rotateY(270deg) translateZ(350px); }
-.carousel-item:nth-child(8) { transform: rotateY(315deg) translateZ(350px); }
-
-@keyframes spin-carousel {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(360deg); }
-}
-
-/* ===== 3D FLIP CARDS ===== */
-.flip-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2.5rem;
-  perspective: 1500px;
-}
-
-.flip-card {
-  height: 380px;
-  perspective: 1000px;
-  cursor: pointer;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transform-style: preserve-3d;
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 24px;
-  overflow: hidden;
-}
-
-.flip-card-front {
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  border: 1px solid rgba(255,107,53,0.2);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-.flip-card-front img {
-  width: 100%;
-  height: 65%;
-  object-fit: cover;
-}
-
-.flip-card-front .f-info {
-  padding: 1.2rem;
-}
-
-.flip-card-front .f-info h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-}
-
-.flip-card-front .f-info .f-price {
-  color: #ff6b35;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.flip-card-back {
-  background: linear-gradient(135deg, #ff6b35, #ff9500);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  text-align: center;
-}
-
-.flip-card-back h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.flip-card-back p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.flip-card-back .badge-3d {
-  background: rgba(0,0,0,0.3);
-  padding: 0.5rem 1.2rem;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
-/* ===== 3D TILT CARDS (GSAP-like with CSS) ===== */
-.tilt-section {
-  background: linear-gradient(180deg, #050505, #0a0a1a, #050505);
-  padding: 6rem 1rem;
-}
-
-.tilt-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  perspective: 1000px;
-}
-
-.tilt-card {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-  border: 1px solid rgba(255,107,53,0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  transform-style: preserve-3d;
-}
-
-.tilt-card:hover {
-  transform: translateY(-15px) rotateX(5deg) rotateY(-5deg) scale(1.03);
-  box-shadow: 
-    0 30px 60px rgba(255,107,53,0.25),
-    0 0 0 1px rgba(255,107,53,0.3);
-}
-
-.tilt-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.tilt-card:hover img {
-  transform: scale(1.15);
-}
-
-.tilt-card .t-info {
-  padding: 1.5rem;
-}
-
-.tilt-card .t-info h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.tilt-card .t-info p {
-  font-size: 0.85rem;
-  color: #aaa;
-  line-height: 1.5;
-}
-
-.tilt-card .t-price {
-  position: absolute;
-  top: 15px; right: 15px;
-  background: linear-gradient(135deg, #ff6b35, #ff9500);
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  box-shadow: 0 5px 20px rgba(255,107,53,0.4);
-}
-
-/* ===== 3D STACK / FAN ===== */
-.stack-section {
-  padding: 6rem 1rem;
-  text-align: center;
-}
-
-.stack-3d {
-  position: relative;
-  width: 300px;
-  height: 400px;
-  margin: 3rem auto;
-  perspective: 1000px;
-}
-
-.stack-card {
-  position: absolute;
-  width: 280px;
-  height: 380px;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 2px solid rgba(255,107,53,0.3);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: pointer;
-}
-
-.stack-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.stack-3d:hover .stack-card:nth-child(1) { transform: translateX(-120px) rotateY(25deg) translateZ(50px); }
-.stack-3d:hover .stack-card:nth-child(2) { transform: translateX(-40px) rotateY(10deg) translateZ(30px); }
-.stack-3d:hover .stack-card:nth-child(3) { transform: translateX(40px) rotateY(-10deg) translateZ(30px); }
-.stack-3d:hover .stack-card:nth-child(4) { transform: translateX(120px) rotateY(-25deg) translateZ(50px); }
-
-.stack-card:nth-child(1) { transform: translateX(0) rotateY(0deg); z-index:4; }
-.stack-card:nth-child(2) { transform: translateX(0) rotateY(0deg); z-index:3; }
-.stack-card:nth-child(3) { transform: translateX(0) rotateY(0deg); z-index:2; }
-.stack-card:nth-child(4) { transform: translateX(0) rotateY(0deg); z-index:1; }
-
-/* ===== PARTICLES ===== */
-.particles {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-.particle {
-  position: absolute;
-  width: 4px; height: 4px;
-  background: #ff6b35;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: particle-float 8s linear infinite;
-}
-
-@keyframes particle-float {
-  0% { transform: translateY(100vh) rotate(0deg); opacity:0; }
-  10% { opacity:0.6; }
-  90% { opacity:0.6; }
-  100% { transform: translateY(-100px) rotate(720deg); opacity:0; }
-}
-
-/* ===== FOOTER ===== */
-.footer-3d {
-  text-align: center;
-  padding: 4rem 1rem;
-  background: #020202;
-  border-top: 1px solid rgba(255,107,53,0.1);
-  perspective: 500px;
-}
-
-.footer-3d h2 {
-  font-size: 3rem;
-  background: linear-gradient(90deg, #ff6b35, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transform: translateZ(50px);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .carousel-3d-wrap { display: none; }
-  .flip-grid { grid-template-columns: 1fr; }
-  .stack-3d { width: 250px; height: 330px; }
-  .stack-card { width: 230px; height: 310px; }
-  .float-item { width: 70px; }
-}
-
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #050505; }
-::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 3px; }
+  :root{
+    --maroon: #2B0D0A;
+    --maroon-2: #401410;
+    --paprika: #C1401F;
+    --turmeric: #E8A33D;
+    --leaf: #4F7942;
+    --cream: #F5E6C8;
+    --steam: #FFF9F0;
+    --ink: #1A0805;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--maroon);
+    color: var(--cream);
+    font-family:'Work Sans', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+  h1,h2,h3{font-family:'Baloo 2', sans-serif; font-weight:800;}
+  a{color:inherit;}
+  ::selection{background:var(--turmeric); color:var(--ink);}
+
+  /* ---------- string lights bg ---------- */
+  .lights{
+    position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.5;
+    background-image:
+      radial-gradient(circle at 8% 6%, var(--turmeric) 0 3px, transparent 4px),
+      radial-gradient(circle at 22% 3%, var(--paprika) 0 2.5px, transparent 3.5px),
+      radial-gradient(circle at 38% 7%, var(--turmeric) 0 3px, transparent 4px),
+      radial-gradient(circle at 55% 2%, var(--paprika) 0 2.5px, transparent 3.5px),
+      radial-gradient(circle at 72% 6%, var(--turmeric) 0 3px, transparent 4px),
+      radial-gradient(circle at 88% 3%, var(--paprika) 0 2.5px, transparent 3.5px),
+      radial-gradient(circle at 95% 8%, var(--turmeric) 0 3px, transparent 4px);
+    animation: twinkle 3.5s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{0%{opacity:.35;} 100%{opacity:.7;}}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px;
+    background:linear-gradient(180deg, rgba(43,13,10,0.97), rgba(43,13,10,0.85));
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(232,163,61,0.25);
+  }
+  .brand{font-family:'Baloo 2'; font-weight:800; font-size:22px; color:var(--turmeric); letter-spacing:0.5px;}
+  .brand span{color:var(--cream);}
+  .tagline-pill{
+    font-family:'Space Mono', monospace; font-size:10px; letter-spacing:1.5px;
+    color:var(--maroon); background:var(--turmeric); padding:5px 10px; border-radius:999px;
+    text-transform:uppercase;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; min-height:100svh; display:flex; flex-direction:column;
+    align-items:center; justify-content:flex-start; padding:48px 20px 0;
+    text-align:center; overflow:hidden; z-index:1;
+  }
+  .eyebrow{
+    font-family:'Space Mono', monospace; font-size:11px; letter-spacing:3px;
+    color:var(--turmeric); text-transform:uppercase; margin-bottom:14px; opacity:0.9;
+  }
+  .hero h1{
+    font-size:clamp(38px, 11vw, 64px); line-height:1.02; color:var(--cream);
+    text-shadow: 0 6px 0 rgba(0,0,0,0.25);
+  }
+  .hero h1 .hl{color:var(--turmeric);}
+  .hero p.sub{
+    max-width:340px; margin:16px auto 0; font-size:15.5px; line-height:1.6; color:rgba(245,230,200,0.85);
+  }
+
+  /* the burst stage */
+  .stage{
+    position:relative; width:100%; max-width:420px; height:420px; margin-top:18px;
+    perspective:1000px;
+  }
+  .steam{
+    position:absolute; left:50%; bottom:52%; width:14px; height:60px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,249,240,0.55), rgba(255,249,240,0) 70%);
+    filter:blur(6px); transform:translateX(-50%);
+    animation: rise 4s ease-in infinite;
+  }
+  .steam.s2{left:42%; animation-delay:1.1s; height:50px;}
+  .steam.s3{left:58%; animation-delay:2.1s; height:70px;}
+  .steam.s4{left:50%; animation-delay:0.5s; height:40px; width:10px;}
+  @keyframes rise{
+    0%{transform:translate(-50%,0) scale(1); opacity:0;}
+    15%{opacity:.8;}
+    100%{transform:translate(-50%,-160px) scale(1.8); opacity:0;}
+  }
+
+  svg#burstSvg{position:absolute; inset:0; width:100%; height:100%; overflow:visible;}
+  .noodle{
+    fill:none; stroke:var(--turmeric); stroke-width:7; stroke-linecap:round;
+    opacity:0; transform-origin:center;
+  }
+  .noodle.alt{stroke:var(--steam);}
+  .packet-half{transform-box:fill-box; transform-origin:center;}
+  .price-stamp{
+    font-family:'Baloo 2'; font-weight:800; fill:var(--maroon);
+  }
+
+  .scroll-cue{
+    margin:20px auto 40px; font-family:'Space Mono', monospace; font-size:11px;
+    letter-spacing:2px; color:var(--cream); opacity:0.6;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .scroll-cue .arrow{animation:bob 1.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);}}
+
+  /* ---------- PRODUCTS ---------- */
+  .section{position:relative; z-index:1; padding:70px 20px;}
+  .section-head{text-align:center; margin-bottom:34px;}
+  .section-head .eyebrow{color:var(--leaf);}
+  .section-head h2{font-size:clamp(28px,7vw,38px); color:var(--cream);}
+
+  .shelf{
+    display:flex; flex-direction:column; gap:22px; max-width:440px; margin:0 auto;
+  }
+  .card{
+    position:relative; background:linear-gradient(160deg, var(--maroon-2), var(--maroon));
+    border:1px solid rgba(232,163,61,0.3); border-radius:18px; padding:22px;
+    transform-style:preserve-3d; transition:transform .35s ease, box-shadow .35s ease;
+    box-shadow:0 14px 30px rgba(0,0,0,0.35);
+  }
+  .card:active{transform:rotateX(4deg) rotateY(-3deg) scale(0.98);}
+  .card .kicker{font-family:'Space Mono'; font-size:10.5px; letter-spacing:2px; color:var(--turmeric); text-transform:uppercase;}
+  .card h3{font-size:24px; margin-top:6px; color:var(--cream);}
+  .card p{font-size:14px; line-height:1.55; color:rgba(245,230,200,0.78); margin-top:8px;}
+  .card .tagrow{display:flex; align-items:center; justify-content:space-between; margin-top:16px;}
+  .price-tag{
+    font-family:'Space Mono'; font-weight:700; background:var(--turmeric); color:var(--maroon);
+    padding:6px 12px; border-radius:8px; font-size:14px; transform:rotate(-3deg);
+  }
+  .card .mini-icons{display:flex; gap:10px; font-size:11px; color:var(--leaf); font-family:'Space Mono';}
+
+  /* ---------- ENJOY STRIP ---------- */
+  .strip{
+    position:relative; z-index:1; padding:20px 0; background:var(--turmeric); color:var(--maroon);
+    overflow:hidden; transform:rotate(-1.4deg); margin:60px -20px;
+  }
+  .strip-track{display:flex; white-space:nowrap; animation:marquee 16s linear infinite;}
+  .strip-track span{
+    font-family:'Baloo 2'; font-weight:800; font-size:22px; padding:0 26px;
+    display:flex; align-items:center; gap:26px;
+  }
+  @keyframes marquee{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    position:relative; z-index:1; padding:50px 20px 40px; text-align:center;
+    border-top:1px solid rgba(232,163,61,0.25);
+  }
+  footer .fbrand{font-family:'Baloo 2'; font-weight:800; font-size:26px; color:var(--turmeric);}
+  footer .addr{font-size:13px; line-height:1.7; color:rgba(245,230,200,0.75); margin-top:14px;}
+  footer .contact{font-family:'Space Mono'; font-size:12.5px; margin-top:14px; color:var(--cream);}
+  footer .socials{margin-top:10px; font-size:13px; color:var(--turmeric);}
+  footer .icons3{display:flex; justify-content:center; gap:22px; margin-top:24px; font-family:'Space Mono'; font-size:11px; color:var(--leaf); flex-wrap:wrap;}
 </style>
-<base target="_blank">
 </head>
 <body>
 
-<!-- Particles -->
-<div class="particles" id="particles"></div>
+<div class="lights"></div>
 
-<!-- ===== HERO 3D ===== -->
-<section class="hero-3d">
-  <div class="floating-products">
-    <img src="./img-019.jpg" class="float-item" alt="">
-    <img src="./img-035.jpg" class="float-item" alt="">
-    <img src="./img-053.jpg" class="float-item" alt="">
-    <img src="./img-070.jpg" class="float-item" alt="">
-    <img src="./img-134.jpg" class="float-item" alt="">
-    <img src="./img-219.jpg" class="float-item" alt="">
-  </div>
-  <div class="hero-content">
-    <h1>RUM PUM</h1>
-    <p class="tagline">3D Product Experience</p>
-    <p class="sub">भारत का नं.1 नूडल्स ब्रांड — अब 3D में</p>
-  </div>
-  <div class="scroll-hint">↓</div>
-</section>
+<nav>
+  <div class="brand">Rum <span>Pum</span></div>
+  <div class="tagline-pill">Rum Pum Enjoy</div>
+</nav>
 
-<!-- ===== 3D CAROUSEL ===== -->
-<section class="section">
-  <h2 class="section-title">🎠 3D Product Carousel</h2>
-  <p style="text-align:center; color:#888; margin-bottom:2rem;">Hover करें रोकने के लिए — products घूम रहे हैं!</p>
-  <div class="carousel-3d-wrap">
-    <div class="carousel-3d">
-      <div class="carousel-item">
-        <img src="./img-019.jpg" alt="">
-        <div class="c-info"><h4>2 Minute Mazza</h4><div class="c-price">₹10</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-021.jpg" alt="">
-        <div class="c-info"><h4>2 Minute Mazza ₹5</h4><div class="c-price">₹5</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-025.jpg" alt="">
-        <div class="c-info"><h4>Family Pack</h4><div class="c-price">₹20</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-035.jpg" alt="">
-        <div class="c-info"><h4>Wow Chow Green</h4><div class="c-price">₹5</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-037.jpg" alt="">
-        <div class="c-info"><h4>Wow Chow Yellow</h4><div class="c-price">₹5</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-046.jpg" alt="">
-        <div class="c-info"><h4>Njoy ₹5</h4><div class="c-price">₹5</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-050.jpg" alt="">
-        <div class="c-info"><h4>Njoy ₹10</h4><div class="c-price">₹10</div></div>
-      </div>
-      <div class="carousel-item">
-        <img src="./img-053.jpg" alt="">
-        <div class="c-info"><h4>Joker</h4><div class="c-price">₹5</div></div>
-      </div>
-    </div>
+<section class="hero">
+  <div class="eyebrow">Asian Thai Foods · Lucknow</div>
+  <h1>फटा पैकेट,<br><span class="hl">महका स्वाद</span></h1>
+  <p class="sub">हर पैकेट में एक धमाका — गरमागरम नूडल्स और क्रंची अल्फाबेट स्नैक्स, सीधे गली के ज़ायके से आपकी थाली तक.</p>
+
+  <div class="stage">
+    <div class="steam s1"></div>
+    <div class="steam s2"></div>
+    <div class="steam s3"></div>
+    <div class="steam s4"></div>
+    <svg id="burstSvg" viewBox="0 0 420 420">
+      <!-- bowl -->
+      <ellipse cx="210" cy="300" rx="120" ry="26" fill="#1A0805" opacity="0.35"/>
+      <path d="M100,270 Q210,340 320,270 L308,300 Q210,352 112,300 Z" fill="#401410" stroke="#E8A33D" stroke-width="3"/>
+      <!-- noodles spilling -->
+      <path class="noodle n1" d="M140,260 C160,200 120,160 150,110" />
+      <path class="noodle n2 alt" d="M180,255 C200,190 165,150 195,95" />
+      <path class="noodle n3" d="M215,258 C230,195 205,145 235,100" />
+      <path class="noodle n4 alt" d="M250,255 C265,195 245,150 270,110" />
+      <path class="noodle n5" d="M285,262 C300,205 275,165 300,120" />
+      <!-- packet halves -->
+      <g class="packet-half left">
+        <path d="M210,260 L60,260 L45,170 Q120,150 210,180 Z" fill="#C1401F" stroke="#F5E6C8" stroke-width="3"/>
+        <text x="80" y="205" font-size="15" class="price-stamp" transform="rotate(-8 80 205)">RUM</text>
+      </g>
+      <g class="packet-half right">
+        <path d="M210,260 L360,260 L375,170 Q300,150 210,180 Z" fill="#4F7942" stroke="#F5E6C8" stroke-width="3"/>
+        <text x="270" y="205" font-size="15" class="price-stamp" fill="#F5E6C8" transform="rotate(8 270 205)">PUM</text>
+      </g>
+      <!-- price stamp -->
+      <g transform="translate(210,350) rotate(-6)">
+        <circle r="34" fill="#E8A33D"/>
+        <text x="0" y="-3" text-anchor="middle" class="price-stamp" font-size="14">₹5</text>
+        <text x="0" y="12" text-anchor="middle" class="price-stamp" font-size="9">/-सिर्फ़</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="scroll-cue">
+    <span>नीचे स्क्रॉल करें</span>
+    <span class="arrow">↓</span>
   </div>
 </section>
 
-<!-- ===== 3D FLIP CARDS ===== -->
-<section class="section" style="background:linear-gradient(180deg,#050505,#0a0510,#050505);">
-  <h2 class="section-title">🔄 3D Flip Cards</h2>
-  <p style="text-align:center; color:#888; margin-bottom:2rem;">Card पर mouse ले जाएं — पीछे की जानकारी दिखेगी!</p>
-  <div class="flip-grid">
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-019.jpg" alt="">
-          <div class="f-info"><h3>2 Minute Mazza</h3><div class="f-price">₹10</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>2 Minute Mazza</h3>
-          <p>मसालेदार नूडल्स जो 2 मिनट में तैयार। हर बाइट में असली देसी स्वाद।</p>
-          <div class="badge-3d">⭐ Popular</div>
-        </div>
+<section class="section" id="products">
+  <div class="section-head">
+    <div class="eyebrow">पूरी रेंज</div>
+    <h2>शेल्फ़ पर क्या-क्या है</h2>
+  </div>
+  <div class="shelf">
+    <div class="card" data-tilt>
+      <div class="kicker">नूडल्स</div>
+      <h3>Rum Pum Noodles</h3>
+      <p>मसालेदार, झटपट बनने वाले नूडल्स — गली के ठेले जैसा स्वाद, घर की रसोई में.</p>
+      <div class="tagrow">
+        <div class="mini-icons"><span>⚡ 2-MIN</span><span>🌶 मसाला</span></div>
+        <div class="price-tag">₹5/-</div>
       </div>
     </div>
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-035.jpg" alt="">
-          <div class="f-info"><h3>Wow Chow Green</h3><div class="f-price">₹5</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>Wow Chow Green</h3>
-          <p>हरी मिर्च का तीखा स्वाद। जिसे तीखा पसंद हो, उनके लिए बना है।</p>
-          <div class="badge-3d">🌶️ Spicy</div>
-        </div>
-      </div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-053.jpg" alt="">
-          <div class="f-info"><h3>Joker Noodles</h3><div class="f-price">₹5</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>Joker Noodles</h3>
-          <p>Joker के साथ खाना बना fun! बच्चों का super favourite character pack।</p>
-          <div class="badge-3d">🎭 Kids</div>
-        </div>
-      </div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-070.jpg" alt="">
-          <div class="f-info"><h3>Hot & Spicy</h3><div class="f-price">₹5</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>Hot & Spicy</h3>
-          <p>लाल मिर्च का असली दम। जिसे तीखा-तीखा चाहिए, बस उन्हीं के लिए।</p>
-          <div class="badge-3d">🔥 Xtra Spicy</div>
-        </div>
-      </div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-072.jpg" alt="">
-          <div class="f-info"><h3>Noodles in Bowl</h3><div class="f-price">₹--</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>Noodles in Bowl</h3>
-          <p>लाल bowl में गर्म-गर्म नूडल्स। Fork included, बस पानी मिलाओ और खाओ।</p>
-          <div class="badge-3d">🥣 New</div>
-        </div>
-      </div>
-    </div>
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="./img-177.jpg" alt="">
-          <div class="f-info"><h3>Alphabet</h3><div class="f-price">₹5</div></div>
-        </div>
-        <div class="flip-card-back">
-          <h3>Alphabet Noodles</h3>
-          <p>ABCD वाले नूडल्स! बच्चों को पढ़ाते-पढ़ाते खिलाओ। Fun + Nutrition।</p>
-          <div class="badge-3d">🔤 Educational</div>
-        </div>
+    <div class="card" data-tilt>
+      <div class="kicker">स्नैक्स</div>
+      <h3>Asian Alphabet</h3>
+      <p>अक्षर-आकार के क्रंची स्नैक्स — बच्चों के लिए खाना और सीखना, दोनों एक साथ.</p>
+      <div class="tagrow">
+        <div class="mini-icons"><span>🔤 A-Z</span><span>🥨 क्रंची</span></div>
+        <div class="price-tag">₹5/-</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 3D TILT CARDS ===== -->
-<section class="tilt-section">
-  <h2 class="section-title">🎯 3D Tilt Gallery</h2>
-  <p style="text-align:center; color:#888; margin-bottom:2rem;">Card पर mouse ले जाएं — 3D tilt effect!</p>
-  <div class="tilt-grid">
-    <div class="tilt-card">
-      <div class="t-price">₹10</div>
-      <img src="./img-019.jpg" alt="">
-      <div class="t-info"><h3>2 Minute Mazza</h3><p>मसालेदार नूडल्स जो 2 मिनट में तैयार</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹5</div>
-      <img src="./img-021.jpg" alt="">
-      <div class="t-info"><h3>Mazza ₹5 Pack</h3><p>छोटा पैक, बड़ा स्वाद!</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹20</div>
-      <img src="./img-025.jpg" alt="">
-      <div class="t-info"><h3>Family Pack</h3><p>पूरी फैमिली के लिए एक ही पैक</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹5</div>
-      <img src="./img-046.jpg" alt="">
-      <div class="t-info"><h3>Njoy ₹5</h3><p>छोटा price, बड़ा njoyment!</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹5</div>
-      <img src="./img-055.jpg" alt="">
-      <div class="t-info"><h3>n-joy RTE</h3><p>बच्चों के लिए special ready-to-eat</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹5</div>
-      <img src="./img-094.jpg" alt="">
-      <div class="t-info"><h3>Katori</h3><p>कटोरी में परोसा हुआ स्वाद</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹10</div>
-      <img src="./img-134.jpg" alt="">
-      <div class="t-info"><h3>Cup Noodles</h3><p>Office, travel, hostel — instant hunger fix</p></div>
-    </div>
-    <div class="tilt-card">
-      <div class="t-price">₹5</div>
-      <img src="./img-236.jpg" alt="">
-      <div class="t-info"><h3>Pasta Snack</h3><p>इटालियन स्वाद में देसी मसाला</p></div>
-    </div>
+<div class="strip">
+  <div class="strip-track">
+    <span>🔥 RUM PUM ENJOY &nbsp; 🍜 गरमागरम मज़ा &nbsp; 🔤 EAT LEARN REPEAT &nbsp; 🔥 RUM PUM ENJOY &nbsp; 🍜 गरमागरम मज़ा &nbsp; 🔤 EAT LEARN REPEAT &nbsp;</span>
+    <span>🔥 RUM PUM ENJOY &nbsp; 🍜 गरमागरम मज़ा &nbsp; 🔤 EAT LEARN REPEAT &nbsp; 🔥 RUM PUM ENJOY &nbsp; 🍜 गरमागरम मज़ा &nbsp; 🔤 EAT LEARN REPEAT &nbsp;</span>
   </div>
-</section>
+</div>
 
-<!-- ===== 3D STACK ===== -->
-<section class="stack-section">
-  <h2 class="section-title">🃏 3D Card Stack</h2>
-  <p style="text-align:center; color:#888; margin-bottom:2rem;">Stack पर hover करें — cards फैल जाएंगी!</p>
-  <div class="stack-3d">
-    <div class="stack-card"><img src="./img-019.jpg" alt=""></div>
-    <div class="stack-card"><img src="./img-035.jpg" alt=""></div>
-    <div class="stack-card"><img src="./img-053.jpg" alt=""></div>
-    <div class="stack-card"><img src="./img-070.jpg" alt=""></div>
+<footer>
+  <div class="fbrand">Rum Pum</div>
+  <div class="addr">
+    Asian Thai Foods Lucknow Pvt. Ltd.<br>
+    Gate No- 1878, Village Kahthwara Paragan – Mohana,<br>
+    Tehsil Bakshi Ka Talab, Lucknow, Uttar Pradesh 226201
   </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer class="footer-3d">
-  <h2>RUM PUM</h2>
-  <p style="color:#666; margin-top:1rem;">Taste the Magic | 20+ Products | 3D Experience</p>
-  <p style="color:#444; margin-top:0.5rem;">© 2026 Rum Pum Foods</p>
+  <div class="contact">+91 7084913500 · info@asianthaifoods.com · www.asianthaifoods.com</div>
+  <div class="socials">@rumpumlucknow</div>
+  <div class="icons3">
+    <span>⭐ FUN SHAPES</span>
+    <span>🍪 CRUNCHY BITES</span>
+    <span>😊 YUMMY TASTE</span>
+  </div>
 </footer>
 
 <script>
-// Particles
-const particlesContainer = document.getElementById('particles');
-for(let i=0; i<30; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  p.style.left = Math.random()*100 + '%';
-  p.style.animationDuration = (5 + Math.random()*5) + 's';
-  p.style.animationDelay = Math.random()*5 + 's';
-  p.style.width = (2 + Math.random()*4) + 'px';
-  p.style.height = p.style.width;
-  particlesContainer.appendChild(p);
-}
+  // Scroll-linked packet burst: opens more as user scrolls into hero, noodles rise, steam intensifies
+  const hero = document.querySelector('.hero');
+  const left = document.querySelector('.packet-half.left');
+  const right = document.querySelector('.packet-half.right');
+  const noodles = document.querySelectorAll('.noodle');
+  const stage = document.querySelector('.stage');
 
-// 3D Tilt effect for cards
-const tiltCards = document.querySelectorAll('.tilt-card');
-tiltCards.forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-    card.style.transform = `translateY(-15px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+  function clamp(v,a,b){return Math.max(a, Math.min(b, v));}
+
+  function onScroll(){
+    const rect = hero.getBoundingClientRect();
+    const total = window.innerHeight;
+    // progress: 0 when hero top at viewport top, 1 when hero scrolled fully past
+    let progress = clamp((0 - rect.top) / (total*0.9), 0, 1);
+
+    const angle = progress * 34; // degrees each half rotates open
+    left.style.transform = `translate(-${progress*46}px, ${progress*10}px) rotate(-${angle}deg)`;
+    right.style.transform = `translate(${progress*46}px, ${progress*10}px) rotate(${angle}deg)`;
+
+    noodles.forEach((n, i) => {
+      const start = 0.15 + i*0.06;
+      const p = clamp((progress - start) / 0.5, 0, 1);
+      n.style.opacity = p;
+      n.style.transform = `translateY(${(1-p)*40}px) scale(${0.85+p*0.15})`;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // subtle 3D tilt on product cards (touch + mouse)
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    function tilt(x,y,rect){
+      const px = (x-rect.left)/rect.width - 0.5;
+      const py = (y-rect.top)/rect.height - 0.5;
+      card.style.transform = `rotateX(${(-py*10).toFixed(2)}deg) rotateY(${(px*10).toFixed(2)}deg)`;
+    }
+    card.addEventListener('mousemove', e=>{
+      tilt(e.clientX, e.clientY, card.getBoundingClientRect());
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+    card.addEventListener('touchmove', e=>{
+      const t=e.touches[0];
+      tilt(t.clientX, t.clientY, card.getBoundingClientRect());
+    }, {passive:true});
+    card.addEventListener('touchend', ()=>{ card.style.transform=''; });
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
 </script>
 
 </body>
